@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KPI — Grupo Nativo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f3ed;--bg2:#ede7da;--bg3:#e2d9cc;--white:#fff;
+  --ink:#1c1712;--ink-dim:#7a6e62;--ink-faint:#b0a898;
+  --gold:#b8860b;--gold-lt:#fdf5dc;--gold-bd:#e8c84a;
+  --green:#1e7a3e;--green-lt:#e6f4ec;
+  --red:#b03020;--red-lt:#fdecea;
+  --amber:#c07010;--amber-lt:#fef3e2;
+  --blue:#1a5c8a;--blue-lt:#e8f1f8;
+  --purple:#6d3aad;--purple-lt:#f0ebfa;
+  --shadow:0 1px 8px rgba(0,0,0,.07);--shadow-md:0 4px 20px rgba(0,0,0,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min-height:100vh;padding-bottom:90px;}
+.sync-bar{background:var(--green);color:#fff;text-align:center;font-size:.65rem;font-weight:600;padding:4px;display:none;}
+.sync-bar.show{display:block;}.sync-bar.error{background:var(--red);}.sync-bar.syncing{background:var(--amber);}
+#screen-login{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
+.login-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;letter-spacing:2px;color:var(--ink);margin-bottom:4px;}
+.login-sub{font-size:.72rem;color:var(--ink-dim);margin-bottom:32px;letter-spacing:1px;text-transform:uppercase;}
+.login-card{background:var(--white);border-radius:16px;padding:24px;width:100%;max-width:340px;box-shadow:var(--shadow-md);}
+.lc-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:16px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:1px;}
+.user-list{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.user-btn{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;border:2px solid var(--bg2);background:var(--bg);cursor:pointer;transition:all .15s;}
+.user-btn.sel{border-color:var(--gold);background:var(--gold-lt);}
+.ub-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;}
+.ub-info{flex:1;}.ub-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;}
+.ub-role{font-size:.6rem;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.8px;}
+.pin-section{margin-top:4px;}
+.pin-lbl{font-size:.62rem;text-transform:uppercase;letter-spacing:1px;color:var(--ink-dim);font-weight:600;margin-bottom:8px;display:block;}
+.pin-dots{display:flex;gap:10px;justify-content:center;margin-bottom:16px;}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:var(--bg2);transition:background .2s;}
+.pin-dot.filled{background:var(--gold);}
+.pin-pad{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.pin-key{background:var(--bg);border:1.5px solid var(--bg2);border-radius:10px;padding:14px 0;text-align:center;font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;cursor:pointer;transition:all .15s;color:var(--ink);}
+.pin-key:active{background:var(--gold-lt);border-color:var(--gold);}
+.pin-key.del{font-size:.85rem;color:var(--red);}
+.pin-error{text-align:center;font-size:.72rem;color:var(--red);font-weight:600;margin-top:8px;min-height:18px;}
+.login-enter{width:100%;margin-top:12px;padding:13px;background:var(--gold);color:#fff;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:1px;cursor:pointer;}
+#screen-app{display:none;}
+.topbar{background:var(--ink);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+.tb-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;color:#f7f3ed;letter-spacing:1px;}
+.tb-right{display:flex;align-items:center;gap:6px;}
+.tb-user{font-size:.65rem;background:rgba(255,255,255,.12);color:#f7f3ed;padding:3px 8px;border-radius:20px;font-weight:600;}
+.tb-week{font-size:.65rem;background:var(--gold);color:#fff;padding:3px 8px;border-radius:20px;font-weight:700;}
+.tb-logout{font-size:.65rem;background:var(--red);color:#fff;padding:3px 8px;border-radius:20px;font-weight:700;cursor:pointer;}
+.role-bar{display:flex;background:var(--bg2);border-bottom:2px solid var(--bg3);}
+.role-tab{flex:1;padding:10px 4px;text-align:center;font-size:.63rem;font-weight:700;font-family:'Syne',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-dim);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;}
+.role-tab.active{color:var(--ink);border-bottom-color:var(--gold);background:var(--bg);}
+.role-tab .ri{font-size:.9rem;display:block;margin-bottom:1px;}
+.panel{display:none;padding:14px 14px 0;animation:fadeUp .25s ease;}
+.panel.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.week-nav{display:flex;align-items:center;gap:8px;background:var(--white);border-radius:10px;padding:9px 12px;box-shadow:var(--shadow);margin-bottom:12px;border:1px solid rgba(0,0,0,.05);}
+.wn-btn{background:var(--bg2);border:none;border-radius:6px;width:28px;height:28px;font-size:.9rem;cursor:pointer;color:var(--ink);display:flex;align-items:center;justify-content:center;}
+.wn-c{flex:1;text-align:center;}.wn-lbl{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;}
+.wn-sub{font-size:.6rem;color:var(--ink-dim);margin-top:1px;}
+.lvl-hdr{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;margin-bottom:12px;}
+.lh-ger{background:var(--ink);color:#f7f3ed;}.lh-enc{background:#3d2010;color:#f7f3ed;}.lh-mes{background:#1e3a5f;color:#f7f3ed;}
+.lh-icon{font-size:1.2rem;}.lh-info{flex:1;}
+.lh-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;}
+.lh-sub{font-size:.6rem;opacity:.65;margin-top:1px;}
+.lh-tag{font-size:.6rem;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.15);white-space:nowrap;}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.kpi-grid.three{grid-template-columns:1fr 1fr 1fr;}
+.kpi-card{background:var(--white);border-radius:10px;padding:11px 12px;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.05);position:relative;overflow:hidden;}
+.kpi-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ac,var(--gold));}
+.kpi-card.ac-gold{--ac:var(--gold)}.kpi-card.ac-green{--ac:var(--green)}.kpi-card.ac-blue{--ac:var(--blue)}.kpi-card.ac-amber{--ac:var(--amber)}.kpi-card.ac-red{--ac:var(--red)}.kpi-card.ac-purple{--ac:var(--purple)}
+.kc-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-dim);font-weight:600;margin-bottom:3px;}
+.kc-val{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;line-height:1;}
+.kc-sub{font-size:.6rem;color:var(--ink-faint);margin-top:3px;}
+.kc-pill{display:inline-block;font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:4px;}
+.p-ok{background:var(--green-lt);color:var(--green)}.p-warn{background:var(--amber-lt);color:var(--amber)}.p-off{background:var(--red-lt);color:var(--red)}.p-neu{background:var(--bg2);color:var(--ink-dim)}
+.inp-card{background:var(--white);border-radius:12px;padding:13px;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.05);margin-bottom:10px;}
+.ic-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.ic-lbl{font-size:.6rem;text-transform:uppercase;letter-spacing:1px;color:var(--ink-dim);font-weight:600;display:block;margin-bottom:3px;}
+.ic-inp{width:100%;background:var(--bg);border:1.5px solid var(--bg2);color:var(--ink);font-family:'Epilogue',sans-serif;font-size:.88rem;font-weight:500;padding:8px 11px;border-radius:8px;outline:none;transition:border-color .2s;}
+.ic-inp:focus{border-color:var(--gold);background:var(--white);}
+.ic-inp.ro-gold{color:var(--gold);font-weight:700;background:var(--gold-lt);border-color:transparent;pointer-events:none;}
+.pal-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--bg);}
+.pal-row:last-child{border-bottom:none;}
+.pal-icon{font-size:.95rem;width:22px;text-align:center;}
+.pal-info{flex:1;min-width:0;}
+.pal-name{font-size:.72rem;font-weight:600;}
+.pal-meta{font-size:.58rem;color:var(--ink-faint);}
+.pal-bar-wrap{height:3px;background:var(--bg2);border-radius:2px;margin-top:4px;overflow:hidden;}
+.pal-bar{height:100%;border-radius:2px;transition:width .4s;}
+.pal-inp-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:72px;}
+.pal-inp{width:68px;background:var(--bg);border:1.5px solid var(--bg2);color:var(--ink);font-size:.82rem;font-weight:500;padding:6px 8px;border-radius:7px;outline:none;text-align:center;font-family:'Epilogue',sans-serif;transition:border-color .2s;}
+.pal-inp:focus{border-color:var(--gold);background:var(--white);}
+.pal-sub{font-size:.58rem;color:var(--green);font-weight:600;text-align:right;}
+.pal-meta-chip{font-size:.56rem;background:var(--bg2);color:var(--ink-dim);padding:1px 5px;border-radius:6px;display:inline-block;}
+.rev-card{background:var(--white);border-radius:12px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px;}
+.rev-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.rev-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;}
+.stars-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
+.star-box{background:var(--bg);border-radius:8px;padding:8px;text-align:center;}
+.sb-val{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;}
+.sb-lbl{font-size:.56rem;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;}
+.team-banner{background:var(--gold-lt);border:1px solid var(--gold-bd);border-radius:10px;padding:11px 13px;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.tb2-icon{font-size:1.2rem;}.tb2-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:var(--gold);}
+.tb2-val{font-size:.68rem;color:var(--ink-dim);margin-top:2px;}
+.admin-section{background:var(--white);border-radius:12px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px;}
+.admin-title{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ink-dim);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--bg2);}
+.admin-user-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bg);}
+.admin-user-row:last-child{border-bottom:none;}
+.aur-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.75rem;}
+.aur-name-inp{flex:1;background:var(--bg);border:1.5px solid var(--bg2);font-size:.8rem;padding:5px 8px;border-radius:6px;outline:none;font-family:'Epilogue',sans-serif;}
+.aur-name-inp:focus{border-color:var(--gold);}
+.aur-inp{width:70px;background:var(--bg);border:1.5px solid var(--bg2);font-size:.8rem;padding:5px 8px;border-radius:6px;outline:none;text-align:center;font-family:'Epilogue',sans-serif;}
+.aur-inp:focus{border-color:var(--gold);}
+.save-admin-btn{width:100%;padding:10px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:1px;cursor:pointer;margin-top:10px;}
+.rank-list{display:flex;flex-direction:column;gap:6px;}
+.rank-item{display:flex;align-items:center;gap:10px;padding:10px 13px;background:var(--white);border-radius:10px;box-shadow:var(--shadow);}
+.rank-pos{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;min-width:22px;text-align:center;}
+.rank-pos.p1{color:#c9a84c}.rank-pos.p2{color:#909090}.rank-pos.p3{color:#b07040}
+.rank-info{flex:1;}.rank-name{font-weight:600;font-size:.8rem;}.rank-det{font-size:.6rem;color:var(--ink-dim);}
+.rank-right{text-align:right;}.rank-val{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;}
+.sec-title{font-family:'Syne',sans-serif;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-dim);margin:14px 0 8px;display:flex;align-items:center;gap:6px;}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--bg3);}
+.div{height:1px;background:var(--bg2);margin:10px 0;}
+.fab{position:fixed;bottom:18px;right:14px;background:var(--gold);color:#fff;border:none;border-radius:50px;padding:12px 20px;font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:1px;cursor:pointer;box-shadow:0 4px 18px rgba(184,134,11,.4);display:flex;align-items:center;gap:6px;z-index:300;transition:transform .15s;}
+.fab:active{transform:scale(.95);}
+.toast{position:fixed;bottom:68px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green);color:#fff;font-weight:600;padding:9px 20px;border-radius:8px;font-size:.75rem;transition:all .3s;z-index:999;opacity:0;pointer-events:none;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.hist-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--bg2);}
+.hist-item:last-child{border-bottom:none;}
+.hist-sem{font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;min-width:55px;}
+.hist-bar-wrap{flex:1;height:4px;background:var(--bg2);border-radius:2px;overflow:hidden;}
+.hist-bar{height:100%;background:var(--gold);border-radius:2px;}
+.hist-val{font-size:.7rem;font-weight:600;min-width:70px;text-align:right;}
+/* TOTAL BANNER */
+.total-banner{background:var(--ink);color:#f7f3ed;border-radius:12px;padding:14px;margin-bottom:10px;display:flex;flex-direction:column;gap:6px;}
+.tot-row{display:flex;justify-content:space-between;align-items:center;}
+.tot-lbl{font-size:.68rem;opacity:.7;}
+.tot-val{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;}
+.tot-divider{height:1px;background:rgba(255,255,255,.15);margin:4px 0;}
+</style>
+</head>
+<body>
+
+<div class="sync-bar" id="sync-bar">⟳ Sincronizando...</div>
+
+<!-- LOGIN -->
+<div id="screen-login">
+  <div class="login-logo">GRUPO NATIVO</div>
+  <div class="login-sub">Sistema de seguimiento</div>
+  <div class="login-card">
+    <div class="lc-title">¿Quién eres?</div>
+    <div class="user-list" id="user-list"></div>
+    <div class="pin-section" id="pin-section" style="display:none;">
+      <span class="pin-lbl" id="pin-lbl">Ingresa tu PIN</span>
+      <div class="pin-dots" id="pin-dots"></div>
+      <div class="pin-pad">
+        <div class="pin-key" onclick="pinKey('1')">1</div><div class="pin-key" onclick="pinKey('2')">2</div><div class="pin-key" onclick="pinKey('3')">3</div>
+        <div class="pin-key" onclick="pinKey('4')">4</div><div class="pin-key" onclick="pinKey('5')">5</div><div class="pin-key" onclick="pinKey('6')">6</div>
+        <div class="pin-key" onclick="pinKey('7')">7</div><div class="pin-key" onclick="pinKey('8')">8</div><div class="pin-key" onclick="pinKey('9')">9</div>
+        <div class="pin-key" style="background:none;border-color:transparent;"></div>
+        <div class="pin-key" onclick="pinKey('0')">0</div>
+        <div class="pin-key del" onclick="pinDel()">⌫</div>
+      </div>
+      <div class="pin-error" id="pin-error"></div>
+      <button class="login-enter" onclick="doLogin()">ENTRAR →</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="screen-app">
+  <div class="topbar">
+    <div class="tb-brand">GRUPO NATIVO</div>
+    <div class="tb-right">
+      <div class="tb-user" id="tb-user">—</div>
+      <div class="tb-week" id="tb-week">SEM 1</div>
+      <div class="tb-logout" onclick="doLogout()">Salir</div>
+    </div>
+  </div>
+  <div class="role-bar" id="role-bar"></div>
+
+  <!-- GERENTE -->
+  <div class="panel" id="panel-ger">
+    <div class="week-nav">
+      <button class="wn-btn" onclick="changeWeek(-1)">‹</button>
+      <div class="wn-c"><div class="wn-lbl" id="wn-ger-l">Semana 1</div><div class="wn-sub" id="wn-ger-s">Foco: Cafés & Postres</div></div>
+      <button class="wn-btn" onclick="changeWeek(1)">›</button>
+    </div>
+    <div class="lvl-hdr lh-ger">
+      <div class="lh-icon">👔</div>
+      <div class="lh-info"><div class="lh-title" id="ger-nombre-hdr">Gerente de Operaciones</div><div class="lh-sub">Vista completa · Tiempo real</div></div>
+      <div class="lh-tag" id="ger-tag">—</div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card ac-gold"><div class="kc-lbl">Venta Semana</div><div class="kc-val" id="ger-venta">$114,000</div><div class="kc-sub">Base: $114,000</div></div>
+      <div class="kpi-card ac-green"><div class="kc-lbl">Incremento</div><div class="kc-val" id="ger-inc">$0</div><div class="kc-pill p-neu" id="ger-inc-pill">Sin ventas</div></div>
+    </div>
+    <div class="kpi-grid three">
+      <div class="kpi-card ac-blue"><div class="kc-lbl">% Avance</div><div class="kc-val" id="ger-pct">0%</div><div class="kc-sub">Meta +25%</div></div>
+      <div class="kpi-card ac-amber"><div class="kc-lbl">vs PE</div><div class="kc-val" id="ger-vspe">+$10K</div><div class="kc-sub">PE $104K</div></div>
+      <div class="kpi-card ac-gold"><div class="kc-lbl">🍺 Cerveza</div><div class="kc-val" id="ger-cerv">$0</div><div class="kc-sub" id="ger-cerv-sub">Base 12 cart.</div></div>
+    </div>
+    <div class="sec-title"><span>⚡</span>Palancas acumuladas</div>
+    <div class="inp-card" id="ger-palancas"></div>
+    <div class="sec-title"><span>👥</span>Desempeño individual</div>
+    <div id="ger-equipo"></div>
+    <div class="sec-title"><span>⭐</span>Reseñas Google · Meta 30/sem</div>
+    <div class="rev-card">
+      <div class="rev-hdr"><div style="font-size:1.3rem;">🔍</div><div><div class="rev-title">Total equipo</div></div><div style="margin-left:auto;"><div class="kc-pill p-neu" id="ger-rev-pill">0/30</div></div></div>
+      <div class="stars-grid">
+        <div class="star-box"><div class="sb-val" id="ger-rev-total">0</div><div class="sb-lbl">Esta semana</div></div>
+        <div class="star-box"><div class="sb-val" id="ger-rev-pct">0%</div><div class="sb-lbl">de meta (30)</div></div>
+        <div class="star-box"><div class="sb-val" id="ger-rev-acum">0</div><div class="sb-lbl">Acumuladas</div></div>
+      </div>
+      <div id="ger-rev-detalle" style="margin-top:8px;"></div>
+    </div>
+    <div class="sec-title"><span>🍺</span>Cerveza Mundial</div>
+    <div class="inp-card">
+      <div class="ic-grid">
+        <div><label class="ic-lbl">Cartones vendidos</label><input class="ic-inp" type="number" id="ger-cartones" placeholder="12 base" oninput="calcCerveza()"></div>
+        <div><label class="ic-lbl">$ auto</label><input class="ic-inp ro-gold" readonly id="ger-cerv-pesos"></div>
+      </div>
+    </div>
+    <div class="sec-title"><span>⚙️</span>Administración</div>
+    <div class="admin-section">
+      <div class="admin-title">Nombres y PINs del equipo</div>
+      <div id="admin-users-list"></div>
+      <button class="save-admin-btn" onclick="saveAdminUsers()">💾 GUARDAR CAMBIOS</button>
+    </div>
+  </div>
+
+  <!-- ENCARGADO -->
+  <div class="panel" id="panel-enc">
+    <div class="week-nav">
+      <button class="wn-btn" onclick="changeWeek(-1)">‹</button>
+      <div class="wn-c"><div class="wn-lbl" id="wn-enc-l">Semana 1</div><div class="wn-sub" id="wn-enc-s">Foco: Cafés & Postres</div></div>
+      <button class="wn-btn" onclick="changeWeek(1)">›</button>
+    </div>
+    <div class="lvl-hdr lh-enc">
+      <div class="lh-icon">📋</div>
+      <div class="lh-info"><div class="lh-title" id="enc-nombre-hdr">Encargado de Turno</div><div class="lh-sub">Tu meta + equipo en tiempo real</div></div>
+      <div class="lh-tag" id="enc-tag">—</div>
+    </div>
+
+    <!-- TOTAL RESTAURANTE visible para encargado -->
+    <div class="total-banner">
+      <div class="tot-row"><span class="tot-lbl">Venta total restaurante esta semana</span></div>
+      <div class="tot-row"><span class="tot-val" id="enc-total-rest">$114,000</span><span class="kc-pill p-neu" id="enc-total-pill">0%</span></div>
+      <div class="tot-divider"></div>
+      <div class="tot-row"><span class="tot-lbl">Tu aporte</span><span style="font-size:.78rem;font-weight:600;" id="enc-aporte-lbl">$0</span></div>
+      <div class="tot-row"><span class="tot-lbl">Equipo meseros</span><span style="font-size:.78rem;font-weight:600;" id="enc-equipo-aporte">$0</span></div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card ac-gold"><div class="kc-lbl">Tu meta semana $</div><div class="kc-val" id="enc-meta-val">$9,975</div><div class="kc-sub">35% del objetivo</div></div>
+      <div class="kpi-card ac-green"><div class="kc-lbl">Tu venta real $</div><div class="kc-val" id="enc-real-val">$0</div><div class="kc-pill p-neu" id="enc-pill">Sin datos</div></div>
+    </div>
+    <div class="kpi-grid three">
+      <div class="kpi-card ac-blue"><div class="kc-lbl">% logrado</div><div class="kc-val" id="enc-pct-val">0%</div><div class="kc-sub">Tu cuota</div></div>
+      <div class="kpi-card ac-amber"><div class="kc-lbl">Falta $</div><div class="kc-val" id="enc-falta-val">—</div><div class="kc-sub">para tu meta</div></div>
+      <div class="kpi-card ac-purple"><div class="kc-lbl">⭐ Reseñas</div><div class="kc-val" id="enc-rev-val">0/11</div><div class="kc-sub">tu meta 11/sem</div></div>
+    </div>
+    <div class="sec-title"><span>⚡</span>Tu captura (piezas → $ auto)</div>
+    <div class="inp-card" id="enc-palancas"></div>
+    <div class="sec-title"><span>⭐</span>Tus reseñas Google · Meta 11</div>
+    <div class="rev-card">
+      <div class="stars-grid">
+        <div class="star-box"><div class="sb-val" id="enc-rev-esta">0</div><div class="sb-lbl">Esta semana</div></div>
+        <div class="star-box"><div class="sb-val">11</div><div class="sb-lbl">Tu meta</div></div>
+        <div class="star-box"><div class="sb-val" id="enc-rev-pct">0%</div><div class="sb-lbl">Logrado</div></div>
+      </div>
+      <label class="ic-lbl">Reseñas que pediste esta semana</label>
+      <input class="ic-inp" type="number" id="enc-rev-inp" placeholder="0" oninput="calcEncReviews()" style="max-width:120px;">
+    </div>
+    <div class="sec-title"><span>👥</span>Avance de tu equipo</div>
+    <div class="inp-card" id="enc-equipo"></div>
+    <div class="team-banner">
+      <div class="tb2-icon">🎯</div>
+      <div><div class="tb2-title">Meta del restaurante</div><div class="tb2-val">$142,500 → +25% sobre base</div></div>
+    </div>
+  </div>
+
+  <!-- MESEROS -->
+  <div class="panel" id="panel-mes">
+    <div class="week-nav">
+      <button class="wn-btn" onclick="changeWeek(-1)">‹</button>
+      <div class="wn-c"><div class="wn-lbl" id="wn-mes-l">Semana 1</div><div class="wn-sub" id="wn-mes-s">Foco: Cafés & Postres</div></div>
+      <button class="wn-btn" onclick="changeWeek(1)">›</button>
+    </div>
+    <div class="lvl-hdr lh-mes">
+      <div class="lh-icon">🍽️</div>
+      <div class="lh-info"><div class="lh-title" id="mes-nombre-hdr">Mis metas</div><div class="lh-sub">Ingresa piezas · el sistema calcula el $</div></div>
+      <div class="lh-tag" id="mes-tag">—</div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card ac-blue"><div class="kc-lbl">Piezas esta semana</div><div class="kc-val" id="mes-piezas-total">0</div><div class="kc-sub" id="mes-piezas-meta">Meta: 0 piezas</div></div>
+      <div class="kpi-card ac-green"><div class="kc-lbl">% de tu meta</div><div class="kc-val" id="mes-pct">0%</div><div class="kc-pill p-neu" id="mes-pill">Sin datos</div></div>
+    </div>
+    <div class="kpi-grid three">
+      <div class="kpi-card ac-gold"><div class="kc-lbl">☕ Cafés</div><div class="kc-val" id="mes-kpi-cafes">0</div><div class="kc-sub" id="mes-kpi-cafes-m">meta 0</div></div>
+      <div class="kpi-card ac-amber"><div class="kc-lbl">🍮 Postres</div><div class="kc-val" id="mes-kpi-postres">0</div><div class="kc-sub" id="mes-kpi-postres-m">meta 0</div></div>
+      <div class="kpi-card ac-purple"><div class="kc-lbl">🥃 Digestivos</div><div class="kc-val" id="mes-kpi-digestivos">0</div><div class="kc-sub" id="mes-kpi-digestivos-m">meta 0</div></div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card ac-purple"><div class="kc-lbl">🌵 Mezcales</div><div class="kc-val" id="mes-kpi-mezcales">0</div><div class="kc-sub" id="mes-kpi-mezcales-m">meta 0</div></div>
+      <div class="kpi-card ac-green"><div class="kc-lbl">⭐ Extras</div><div class="kc-val" id="mes-kpi-atencion">0</div><div class="kc-sub" id="mes-kpi-atencion-m">meta 0</div></div>
+    </div>
+    <div class="sec-title"><span>⚡</span>Captura tus piezas</div>
+    <div class="inp-card" id="mes-palancas"></div>
+    <div class="sec-title"><span>⭐</span>Tu meta de reseñas Google · Meta 6</div>
+    <div class="rev-card">
+      <div class="stars-grid">
+        <div class="star-box"><div class="sb-val" id="mes-rev-esta">0</div><div class="sb-lbl">Esta semana</div></div>
+        <div class="star-box"><div class="sb-val">6</div><div class="sb-lbl">Tu meta</div></div>
+        <div class="star-box"><div class="sb-val" id="mes-rev-pct">0%</div><div class="sb-lbl">Logrado</div></div>
+      </div>
+      <label class="ic-lbl">Reseñas que pediste esta semana</label>
+      <input class="ic-inp" type="number" id="mes-rev-inp" placeholder="0" oninput="calcMesReviews()" style="max-width:120px;">
+      <div style="margin-top:8px;font-size:.65rem;color:var(--ink-dim);">💡 Pide una reseña al cerrar cada mesa. Son solo 1-2 por turno.</div>
+    </div>
+  </div>
+
+  <!-- RANKING -->
+  <div class="panel" id="panel-rank">
+    <div class="lvl-hdr" style="background:#1a3320;color:#f7f3ed;margin-bottom:12px;">
+      <div class="lh-icon">🏆</div>
+      <div class="lh-info"><div class="lh-title">Ranking Semanal</div><div class="lh-sub">Tiempo real · se actualiza al guardar</div></div>
+    </div>
+    <div class="kpi-grid" style="margin-bottom:14px;">
+      <div class="kpi-card ac-gold"><div class="kc-lbl">🥇 Mejor</div><div class="kc-val" id="rank-best">—</div><div class="kc-sub" id="rank-best-val">Sin datos</div></div>
+      <div class="kpi-card ac-green"><div class="kc-lbl">Total equipo</div><div class="kc-val" id="rank-total">$0</div><div class="kc-sub" id="rank-pct">—</div></div>
+    </div>
+    <div class="rank-list" id="rank-list"></div>
+    <div class="div" style="margin:14px 0;"></div>
+    <div class="sec-title"><span>📈</span>Historial restaurante</div>
+    <div class="inp-card"><div id="hist-list"></div></div>
+  </div>
+</div>
+
+<button class="fab" id="save-fab" onclick="guardar()" style="display:none;">💾 GUARDAR</button>
+<div class="toast" id="toast">✓ Guardado</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDQKHBQJk4UvLmhgYG2UQgCQjWhzj4776U",
+  authDomain: "casa-peninsular-ventas.firebaseapp.com",
+  projectId: "casa-peninsular-ventas",
+  storageBucket: "casa-peninsular-ventas.firebasestorage.app",
+  messagingSenderId: "24822178907",
+  appId: "1:24822178907:web:c8b58f2e3b477a6c454b7e"
+};
+const fireApp = initializeApp(firebaseConfig);
+const db = getFirestore(fireApp);
+
+// ══════ CONSTANTES ══════
+const BASE=114000,PE=104000,META_SEM=142500,INC_OBJ=28500;
+const PRICE_CERV=55,BASE_CART=12;
+const PRECIOS={cafes:52,postres:75,digestivos:100,mezcales:100,atencion:80};
+const PALANCAS=[
+  {id:'cafes',emoji:'☕',label:'Cafés',color:'#b8860b'},
+  {id:'postres',emoji:'🍮',label:'Postres',color:'#c07010'},
+  {id:'digestivos',emoji:'🥃',label:'Digestivos',color:'#1a5c8a'},
+  {id:'mezcales',emoji:'🌵',label:'Mezcales',color:'#6d3aad'},
+  {id:'atencion',emoji:'⭐',label:'Consumo extra',color:'#1e7a3e'},
+];
+const PCT_ENC=0.35;
+const META_ENC_$=Math.round(INC_OBJ*PCT_ENC);       // $9,975
+const META_MES_$=Math.round(INC_OBJ*(1-PCT_ENC)/3); // $6,175
+const META_REV_ENC=11, META_REV_MES=6;
+const metaPiezasEnc=(pid)=>Math.round((META_ENC_$/PALANCAS.length)/PRECIOS[pid]);
+const metaPiezasMes=(pid)=>Math.round((META_MES_$/PALANCAS.length)/PRECIOS[pid]);
+const SEM_CFG=[
+  {l:'Semana 1',s:'Foco: Cafés & Postres'},
+  {l:'Semana 2',s:'Foco: Cafés & Postres'},
+  {l:'Semana 3',s:'Foco: Digestivos + Atención'},
+  {l:'Semana 4',s:'Foco: Digestivos + Atención'},
+  {l:'Semana 5',s:'Foco: Mezcales + Consolidar'},
+  {l:'Semana 6',s:'Meta Plena +25%'},
+];
+const DEFAULT_USERS=[
+  {id:'ger',role:'ger',nombre:'Miguel Rojas',pin:'1234',color:'#1c1712',bg:'#e8e2d8'},
+  {id:'enc',role:'enc',nombre:'Encargado',   pin:'2222',color:'#3d2010',bg:'#f5e8d8'},
+  {id:'m1', role:'mes',nombre:'Mesero 1',    pin:'3333',color:'#e07820',bg:'#fef0e0'},
+  {id:'m2', role:'mes',nombre:'Mesero 2',    pin:'4444',color:'#6d3aad',bg:'#f0ebfa'},
+  {id:'m3', role:'mes',nombre:'Mesero 3',    pin:'5555',color:'#1e7a3e',bg:'#e6f4ec'},
+];
+
+// ══════ STATE ══════
+let week=1, currentUser=null, pinBuf='', selUserId=null;
+let localData={}, users=[...DEFAULT_USERS], unsub=null;
+
+// ══════ FIREBASE ══════
+const weekRef=(w)=>doc(db,'semanas','semana'+(w||week));
+const usersRef=()=>doc(db,'config','usuarios');
+
+function syncBar(msg,type='syncing'){
+  const b=document.getElementById('sync-bar');
+  b.textContent=msg;b.className='sync-bar show '+type;
+  if(type==='ok')setTimeout(()=>b.classList.remove('show'),2000);
+}
+async function saveFS(w,data){
+  try{syncBar('⟳ Guardando...','syncing');await setDoc(weekRef(w),data,{merge:true});syncBar('✓ Sincronizado','ok');}
+  catch(e){syncBar('⚠ Sin conexión','error');console.error(e);}
+}
+async function loadFS(w){
+  try{const s=await getDoc(weekRef(w));return s.exists()?s.data():{};}
+  catch(e){return localData['w'+w]||{};}
+}
+async function saveUsers(u){try{await setDoc(usersRef(),{users:u},{merge:true});}catch(e){console.error(e);}}
+async function loadUsers(){
+  try{const s=await getDoc(usersRef());if(s.exists()&&s.data().users)return s.data().users;}catch(e){}
+  return DEFAULT_USERS;
+}
+function subscribeWeek(w){
+  if(unsub)unsub();
+  unsub=onSnapshot(weekRef(w),(s)=>{
+    if(s.exists()){localData['w'+w]=s.data();refreshAll();}
+  },(e)=>console.error(e));
+}
+
+// ══════ LOGIN ══════
+function renderLogin(){
+  document.getElementById('user-list').innerHTML=users.map(u=>`
+    <div class="user-btn" id="ubtn-${u.id}" onclick="selUser('${u.id}')">
+      <div class="ub-av" style="background:${u.bg};color:${u.color};">${u.nombre.charAt(0)}</div>
+      <div class="ub-info"><div class="ub-name">${u.nombre}</div><div class="ub-role">${u.role==='ger'?'Gerente':u.role==='enc'?'Encargado':'Mesero'}</div></div>
+      <div style="font-size:.7rem;color:var(--ink-faint);">›</div>
+    </div>`).join('');
+}
+window.selUser=id=>{
+  selUserId=id;
+  users.forEach(u=>document.getElementById('ubtn-'+u.id)?.classList.remove('sel'));
+  document.getElementById('ubtn-'+id)?.classList.add('sel');
+  pinBuf='';updateDots();
+  document.getElementById('pin-section').style.display='block';
+  document.getElementById('pin-error').textContent='';
+  document.getElementById('pin-lbl').textContent='PIN de '+users.find(x=>x.id===id).nombre;
+};
+window.pinKey=k=>{if(pinBuf.length<4){pinBuf+=k;updateDots();}};
+window.pinDel=()=>{pinBuf=pinBuf.slice(0,-1);updateDots();};
+function updateDots(){
+  document.getElementById('pin-dots').innerHTML=[0,1,2,3].map(i=>`<div class="pin-dot ${i<pinBuf.length?'filled':''}"></div>`).join('');
+}
+window.doLogin=async()=>{
+  const u=users.find(x=>x.id===selUserId);
+  if(!u){document.getElementById('pin-error').textContent='Selecciona un usuario';return;}
+  if(pinBuf!==u.pin){document.getElementById('pin-error').textContent='PIN incorrecto';pinBuf='';updateDots();return;}
+  currentUser=u;
+  document.getElementById('screen-login').style.display='none';
+  document.getElementById('screen-app').style.display='block';
+  document.getElementById('save-fab').style.display='flex';
+  document.getElementById('tb-user').textContent=u.nombre;
+  buildTabs();updateWeekUI();
+  await loadWeek(week);
+  subscribeWeek(week);
+};
+window.doLogout=()=>{
+  if(unsub){unsub();unsub=null;}
+  currentUser=null;selUserId=null;pinBuf='';
+  document.getElementById('screen-login').style.display='flex';
+  document.getElementById('screen-app').style.display='none';
+  document.getElementById('save-fab').style.display='none';
+  renderLogin();
+  document.getElementById('pin-section').style.display='none';
+};
+
+// ══════ TABS ══════
+function buildTabs(){
+  const role=currentUser.role;
+  let tabs=[];
+  if(role==='ger') tabs=[{id:'ger',icon:'👔',lbl:'Gerente'},{id:'enc',icon:'📋',lbl:'Encargado'},{id:'mes',icon:'🍽️',lbl:'Meseros'},{id:'rank',icon:'🏆',lbl:'Ranking'}];
+  else if(role==='enc') tabs=[{id:'enc',icon:'📋',lbl:'Mi turno'},{id:'rank',icon:'🏆',lbl:'Ranking'}];
+  else tabs=[{id:'mes',icon:'🍽️',lbl:'Mis metas'}];
+  document.getElementById('role-bar').innerHTML=tabs.map(t=>`<div class="role-tab" id="tab-${t.id}" onclick="showTab('${t.id}')"><span class="ri">${t.icon}</span>${t.lbl}</div>`).join('');
+  showTab(tabs[0].id);
+}
+window.showTab=id=>{
+  document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+id)?.classList.add('active');
+  document.getElementById('panel-'+id)?.classList.add('active');
+  if(id==='rank')renderRanking();
+  if(id==='enc'){renderEncPalancas();renderEncEquipo();}
+  if(id==='ger'){renderGerPalancas();renderAdminUsers();}
+  if(id==='mes')renderMesPalancas();
+};
+
+// ══════ SEMANA ══════
+window.changeWeek=async d=>{
+  week=Math.max(1,Math.min(6,week+d));
+  updateWeekUI();await loadWeek(week);subscribeWeek(week);
+};
+function updateWeekUI(){
+  const c=SEM_CFG[week-1];
+  document.getElementById('tb-week').textContent='SEM '+week;
+  ['ger','enc','mes'].forEach(id=>{
+    const l=document.getElementById('wn-'+id+'-l');const s=document.getElementById('wn-'+id+'-s');
+    if(l)l.textContent=c.l;if(s)s.textContent=c.s;
+  });
+}
+async function loadWeek(w){
+  const data=await loadFS(w);localData['w'+w]=data;refreshAll();
+}
+function getW(){return localData['w'+week]||{};}
+function getMD(mid){return (getW().mes||{})[mid]||{};}
+function getEncP(){return getW().enc_p||{};}
+function getMesUsers(){return users.filter(u=>u.role==='mes');}
+
+function refreshAll(){
+  fillInputs();
+  renderGerPalancas();
+  renderEncPalancas();
+  renderMesPalancas();
+  renderEncEquipo();
+}
+function fillInputs(){
+  PALANCAS.forEach(p=>{
+    const el=document.getElementById('enc-inp-'+p.id);
+    if(el&&document.activeElement!==el)el.value=getEncP()[p.id]||'';
+  });
+  if(currentUser?.role==='mes'){
+    const mid=currentUser.id;
+    PALANCAS.forEach(p=>{
+      const el=document.getElementById('mp-inp-'+p.id);
+      if(el&&document.activeElement!==el)el.value=getMD(mid)[p.id]||'';
+    });
+    const rEl=document.getElementById('mes-rev-inp');
+    if(rEl&&document.activeElement!==rEl)rEl.value=getMD(mid).reviews||'';
+  }
+  if(currentUser?.role==='enc'){
+    const rEl=document.getElementById('enc-rev-inp');
+    if(rEl&&document.activeElement!==rEl)rEl.value=getW().enc_reviews||'';
+  }
+  const cart=document.getElementById('ger-cartones');
+  if(cart&&document.activeElement!==cart){cart.value=getW().cartones||'';calcCerveza();}
+  const rev=document.getElementById('ger-rev-inp');
+  if(rev&&document.activeElement!==rev){rev.value=getW().reviews||'';calcReviews();}
+}
+
+// ══════ PIEZAS ══════
+const p2p=(id,n)=>(n||0)*(PRECIOS[id]||0);
+const totPesos=(obj)=>PALANCAS.reduce((s,p)=>s+p2p(p.id,obj[p.id]||0),0);
+const totPiezas=(obj)=>PALANCAS.reduce((s,p)=>s+(obj[p.id]||0),0);
+
+function readEncP(){
+  const o={};PALANCAS.forEach(p=>{const el=document.getElementById('enc-inp-'+p.id);o[p.id]=el?(parseFloat(el.value)||0):(getEncP()[p.id]||0);});return o;
+}
+function readMesP(mid){
+  const o={};PALANCAS.forEach(p=>{const el=document.getElementById('mp-inp-'+p.id);o[p.id]=el&&currentUser?.id===mid?(parseFloat(el.value)||0):(getMD(mid)[p.id]||0);});return o;
+}
+
+// ══════ GERENTE ══════
+function renderGerPalancas(){
+  const div=document.getElementById('ger-palancas');if(!div)return;
+  let rows='',totalInc=0;
+  PALANCAS.forEach(p=>{
+    let piezas=(getEncP()[p.id]||0);
+    getMesUsers().forEach(m=>piezas+=(getMD(m.id)[p.id]||0));
+    const pesos=p2p(p.id,piezas);totalInc+=pesos;
+    const metaPal=Math.round(INC_OBJ/PALANCAS.length);
+    const pct=metaPal>0?Math.min(100,Math.round((pesos/metaPal)*100)):0;
+    rows+=`<div class="pal-row"><div class="pal-icon">${p.emoji}</div><div class="pal-info"><div class="pal-name">${p.label}</div><div class="pal-meta">${piezas} piezas · $${pesos.toLocaleString()} · meta $${metaPal.toLocaleString()}</div><div class="pal-bar-wrap"><div class="pal-bar" style="width:${pct}%;background:${p.color};"></div></div></div><div style="text-align:right;min-width:44px;"><div style="font-size:.7rem;font-weight:700;color:${p.color};">${pct}%</div></div></div>`;
+  });
+  div.innerHTML=rows;
+  updateGerKPIs(totalInc);
+  renderGerEquipo();
+  renderGerRevDetalle();
+}
+function updateGerKPIs(inc){
+  const venta=BASE+inc,pct=((inc/BASE)*100).toFixed(1),vspe=venta-PE;
+  setText('ger-venta','$'+Math.round(venta).toLocaleString());
+  setText('ger-inc','$'+Math.round(inc).toLocaleString());
+  setText('ger-pct',pct+'%');
+  setText('ger-vspe',(vspe>=0?'+':'')+Math.round(vspe/1000)+'K');
+  const pill=document.getElementById('ger-inc-pill'),tag=document.getElementById('ger-tag');
+  if(inc>=INC_OBJ){setPill(pill,'✓ Meta lograda','p-ok');tag.textContent='✓ META';}
+  else if(inc>0){setPill(pill,'+'+pct+'% avance','p-warn');tag.textContent='EN CURSO';}
+  else{setPill(pill,'Sin incremento','p-off');tag.textContent='INICIO';}
+}
+function renderGerEquipo(){
+  const div=document.getElementById('ger-equipo');if(!div)return;
+  const enc=users.find(u=>u.role==='enc');
+  let html='<div class="inp-card">';
+  const encT=totPesos(readEncP());
+  html+=personaRow('📋',enc?enc.nombre:'Encargado','35% · meta $'+META_ENC_$.toLocaleString(),encT,Math.min(100,Math.round((encT/META_ENC_$)*100)),enc?enc.color:'#3d2010');
+  getMesUsers().forEach(m=>{
+    const t=totPesos(readMesP(m.id));
+    html+=personaRow('🍽️',m.nombre,'Meta $'+META_MES_$.toLocaleString(),t,Math.min(100,Math.round((t/META_MES_$)*100)),m.color);
+  });
+  html+='</div>';div.innerHTML=html;
+}
+function personaRow(icon,nombre,sub,total,pct,color){
+  return `<div class="pal-row"><div class="pal-icon">${icon}</div><div class="pal-info"><div class="pal-name">${nombre}</div><div class="pal-meta">${sub}</div><div class="pal-bar-wrap"><div class="pal-bar" style="width:${pct}%;background:${color};"></div></div></div><div style="text-align:right;min-width:60px;"><div style="font-size:.75rem;font-weight:700;">$${total.toLocaleString()}</div><div style="font-size:.6rem;color:var(--ink-dim);">${pct}%</div></div></div>`;
+}
+function renderGerRevDetalle(){
+  const div=document.getElementById('ger-rev-detalle');if(!div)return;
+  const encRev=getW().enc_reviews||0;
+  let totalRev=encRev;
+  const enc=users.find(u=>u.role==='enc');
+  let rows=`<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.68rem;border-bottom:1px solid var(--bg2);"><span>${enc?enc.nombre:'Encargado'}</span><span style="font-weight:700;">${encRev}/11</span></div>`;
+  getMesUsers().forEach(m=>{
+    const rev=getMD(m.id).reviews||0;totalRev+=rev;
+    rows+=`<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.68rem;border-bottom:1px solid var(--bg2);"><span>${m.nombre}</span><span style="font-weight:700;">${rev}/6</span></div>`;
+  });
+  div.innerHTML=rows;
+  // actualizar KPIs reseñas gerente
+  const pct=Math.round((totalRev/30)*100);
+  setText('ger-rev-total',totalRev);setText('ger-rev-pct',pct+'%');
+  const pill=document.getElementById('ger-rev-pill');
+  if(totalRev>=30)setPill(pill,'✓ '+totalRev+'/30','p-ok');
+  else if(totalRev>0)setPill(pill,totalRev+'/30','p-warn');
+  else setPill(pill,'0/30','p-neu');
+  let acum=totalRev;
+  Object.keys(localData).forEach(k=>{if(k!=='w'+week){const wd=localData[k];acum+=(wd.enc_reviews||0);getMesUsers().forEach(m=>acum+=((wd.mes?.[m.id]?.reviews)||0));}});
+  setText('ger-rev-acum',acum);
+}
+window.calcCerveza=()=>{
+  const cart=parseFloat(document.getElementById('ger-cartones')?.value)||0;
+  const pesos=cart*24*PRICE_CERV;
+  const el=document.getElementById('ger-cerv-pesos');if(el)el.value=pesos?'$'+pesos.toLocaleString():'';
+  setText('ger-cerv',pesos?'$'+pesos.toLocaleString():'$0');
+  setText('ger-cerv-sub',cart>0?(cart/BASE_CART).toFixed(1)+'x vs base':'Base 12 cart.');
+};
+window.calcReviews=()=>{
+  // Reviews para gerente se calculan en renderGerRevDetalle
+  renderGerRevDetalle();
+};
+
+// ══════ ENCARGADO ══════
+function renderEncPalancas(){
+  const div=document.getElementById('enc-palancas');if(!div)return;
+  const saved=getEncP();let rows='';
+  PALANCAS.forEach(p=>{
+    const piezas=saved[p.id]||'';
+    const pesos=p2p(p.id,parseFloat(piezas)||0);
+    const metaPal=metaPiezasEnc(p.id);
+    const metaPesos=Math.round(META_ENC_$/PALANCAS.length);
+    const pct=metaPesos>0?Math.min(100,Math.round((pesos/metaPesos)*100)):0;
+    rows+=`<div class="pal-row"><div class="pal-icon">${p.emoji}</div><div class="pal-info"><div class="pal-name">${p.label} <span style="font-size:.56rem;color:var(--ink-faint);">$${PRECIOS[p.id]}/pza</span></div><div class="pal-meta" id="ep-sub-${p.id}">$${pesos.toLocaleString()} · meta ${metaPal} pzas</div><div class="pal-bar-wrap"><div class="pal-bar" id="ep-bar-${p.id}" style="width:${pct}%;background:${p.color};"></div></div></div><div class="pal-inp-wrap"><input class="pal-inp" type="number" id="enc-inp-${p.id}" value="${piezas}" placeholder="0" oninput="calcEnc()"><div class="pal-sub" id="ep-peso-${p.id}">$${pesos.toLocaleString()}</div></div></div>`;
+  });
+  div.innerHTML=rows;calcEnc();
+}
+window.calcEnc=()=>{
+  let total=0;
+  PALANCAS.forEach(p=>{
+    const piezas=parseFloat(document.getElementById('enc-inp-'+p.id)?.value)||0;
+    const pesos=p2p(p.id,piezas);total+=pesos;
+    const metaPesos=Math.round(META_ENC_$/PALANCAS.length);
+    const pct=metaPesos>0?Math.min(100,Math.round((pesos/metaPesos)*100)):0;
+    const bar=document.getElementById('ep-bar-'+p.id);
+    const sub=document.getElementById('ep-sub-'+p.id);
+    const peso=document.getElementById('ep-peso-'+p.id);
+    if(bar)bar.style.width=pct+'%';
+    if(sub)sub.textContent='$'+pesos.toLocaleString()+' · meta '+metaPiezasEnc(p.id)+' pzas';
+    if(peso)peso.textContent='$'+pesos.toLocaleString();
+  });
+  const pct=META_ENC_$>0?((total/META_ENC_$)*100).toFixed(1):0;
+  setText('enc-meta-val','$'+META_ENC_$.toLocaleString());
+  setText('enc-real-val','$'+Math.round(total).toLocaleString());
+  setText('enc-pct-val',pct+'%');
+  setText('enc-falta-val',total<META_ENC_$?'$'+Math.round(META_ENC_$-total).toLocaleString():'✓ Listo');
+  const pill=document.getElementById('enc-pill'),tag=document.getElementById('enc-tag');
+  if(total>=META_ENC_$){setPill(pill,'✓ Meta lograda','p-ok');tag.textContent='✓ '+pct+'%';}
+  else if(total>0){setPill(pill,pct+'% logrado','p-warn');tag.textContent=pct+'%';}
+  else{setPill(pill,'Sin datos','p-neu');tag.textContent='—';}
+  // Total restaurante para encargado
+  let mesT=0;getMesUsers().forEach(m=>mesT+=totPesos(readMesP(m.id)));
+  const totalRest=BASE+total+mesT;
+  const pctRest=((( totalRest-BASE)/BASE)*100).toFixed(1);
+  setText('enc-total-rest','$'+Math.round(totalRest).toLocaleString());
+  setText('enc-aporte-lbl','$'+Math.round(total).toLocaleString());
+  setText('enc-equipo-aporte','$'+Math.round(mesT).toLocaleString());
+  const totalPill=document.getElementById('enc-total-pill');
+  if(totalPill){
+    const inc=totalRest-BASE;
+    if(inc>=INC_OBJ)setPill(totalPill,'✓ Meta','p-ok');
+    else if(inc>0)setPill(totalPill,'+'+pctRest+'%','p-warn');
+    else setPill(totalPill,'0%','p-neu');
+  }
+  renderEncEquipo();
+};
+window.calcEncReviews=()=>{
+  const val=parseInt(document.getElementById('enc-rev-inp')?.value)||0;
+  const pct=Math.round((val/META_REV_ENC)*100);
+  setText('enc-rev-esta',val);setText('enc-rev-pct',pct+'%');
+  setText('enc-rev-val',val+'/11');
+};
+function renderEncEquipo(){
+  const div=document.getElementById('enc-equipo');if(!div)return;
+  let html='';
+  getMesUsers().forEach(m=>{
+    const pObj=readMesP(m.id);
+    const rev=getMD(m.id).reviews||0;
+    let rows='';
+    PALANCAS.forEach(p=>{
+      const piezas=pObj[p.id]||0;const meta=metaPiezasMes(p.id);
+      const pct=meta>0?Math.min(100,Math.round((piezas/meta)*100)):0;
+      rows+=`<div style="display:flex;align-items:center;gap:6px;padding:4px 0;"><span style="font-size:.75rem;">${p.emoji}</span><span style="font-size:.65rem;flex:1;color:var(--ink-dim);">${p.label}</span><div style="width:50px;height:3px;background:var(--bg2);border-radius:2px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${p.color};border-radius:2px;"></div></div><span style="font-size:.65rem;font-weight:700;min-width:36px;text-align:right;">${piezas}/${meta}</span></div>`;
+    });
+    const revPct=Math.min(100,Math.round((rev/META_REV_MES)*100));
+    html+=`<div style="padding:10px 0;border-bottom:1px solid var(--bg2);">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <div style="width:26px;height:26px;border-radius:50%;background:${m.color}20;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.7rem;color:${m.color};">${m.nombre.charAt(0)}</div>
+        <div style="font-weight:700;font-size:.78rem;flex:1;">${m.nombre}</div>
+        <div style="font-size:.65rem;color:var(--ink-dim);">${totPiezas(pObj)} pzas</div>
+      </div>
+      ${rows}
+      <div style="display:flex;align-items:center;gap:6px;padding:4px 0;margin-top:4px;border-top:1px dashed var(--bg2);">
+        <span style="font-size:.75rem;">⭐</span>
+        <span style="font-size:.65rem;flex:1;color:var(--ink-dim);">Reseñas Google</span>
+        <div style="width:50px;height:3px;background:var(--bg2);border-radius:2px;overflow:hidden;"><div style="height:100%;width:${revPct}%;background:#c9a84c;border-radius:2px;"></div></div>
+        <span style="font-size:.65rem;font-weight:700;min-width:36px;text-align:right;">${rev}/${META_REV_MES}</span>
+      </div>
+    </div>`;
+  });
+  div.innerHTML=html||'<div style="font-size:.72rem;color:var(--ink-faint);padding:8px 0;">Sin datos aún</div>';
+}
+
+// ══════ MESERO ══════
+function renderMesPalancas(){
+  if(!currentUser||currentUser.role!=='mes')return;
+  const mid=currentUser.id;
+  const div=document.getElementById('mes-palancas');if(!div)return;
+  const saved=getMD(mid);let rows='';
+  PALANCAS.forEach(p=>{
+    const piezas=saved[p.id]||'';
+    const meta=metaPiezasMes(p.id);
+    const pct=meta>0?Math.min(100,Math.round(((parseFloat(piezas)||0)/meta)*100)):0;
+    rows+=`<div class="pal-row"><div class="pal-icon">${p.emoji}</div><div class="pal-info"><div class="pal-name">${p.label}</div><div class="pal-meta" id="mp-sub-${p.id}"><span class="pal-meta-chip">Meta: ${meta} pzas</span> Llevas: ${parseFloat(piezas)||0}</div><div class="pal-bar-wrap"><div class="pal-bar" id="mp-bar-${p.id}" style="width:${pct}%;background:${p.color};"></div></div></div><div class="pal-inp-wrap"><input class="pal-inp" type="number" id="mp-inp-${p.id}" value="${piezas}" placeholder="0" oninput="calcMes()"><div class="pal-sub" id="mp-pct-${p.id}">${pct}%</div></div></div>`;
+  });
+  div.innerHTML=rows;
+  setText('mes-nombre-hdr',currentUser.nombre+' — Mis metas');
+  calcMes();
+}
+window.calcMes=()=>{
+  if(!currentUser||currentUser.role!=='mes')return;
+  let totalPz=0;
+  const metaTotal=PALANCAS.reduce((s,p)=>s+metaPiezasMes(p.id),0);
+  PALANCAS.forEach(p=>{
+    const piezas=parseFloat(document.getElementById('mp-inp-'+p.id)?.value)||0;
+    const meta=metaPiezasMes(p.id);totalPz+=piezas;
+    const pct=meta>0?Math.min(100,Math.round((piezas/meta)*100)):0;
+    const bar=document.getElementById('mp-bar-'+p.id);
+    const sub=document.getElementById('mp-sub-'+p.id);
+    const pctEl=document.getElementById('mp-pct-'+p.id);
+    if(bar)bar.style.width=pct+'%';
+    if(sub)sub.innerHTML=`<span class="pal-meta-chip">Meta: ${meta} pzas</span> Llevas: ${piezas}`;
+    if(pctEl)pctEl.textContent=pct+'%';
+    setText('mes-kpi-'+p.id,piezas);setText('mes-kpi-'+p.id+'-m','meta '+meta);
+  });
+  const pct=metaTotal>0?((totalPz/metaTotal)*100).toFixed(1):0;
+  setText('mes-piezas-total',totalPz);setText('mes-piezas-meta','Meta: '+metaTotal+' piezas');setText('mes-pct',pct+'%');
+  const pill=document.getElementById('mes-pill'),tag=document.getElementById('mes-tag');
+  if(totalPz>=metaTotal){setPill(pill,'✓ Meta lograda','p-ok');tag.textContent='✓ '+pct+'%';}
+  else if(totalPz>0){setPill(pill,pct+'% logrado','p-warn');tag.textContent=pct+'%';}
+  else{setPill(pill,'Sin datos','p-neu');tag.textContent='—';}
+};
+window.calcMesReviews=()=>{
+  const val=parseInt(document.getElementById('mes-rev-inp')?.value)||0;
+  const pct=Math.round((val/META_REV_MES)*100);
+  setText('mes-rev-esta',val);setText('mes-rev-pct',pct+'%');
+};
+
+// ══════ RANKING ══════
+function renderRanking(){
+  const enc=users.find(u=>u.role==='enc');
+  const encT=totPesos(readEncP());
+  const items=[
+    {nombre:enc?enc.nombre:'Encargado',color:enc?enc.color:'#3d2010',total:encT,meta:META_ENC_$,icon:'📋'},
+    ...getMesUsers().map(m=>({nombre:m.nombre,color:m.color,total:totPesos(readMesP(m.id)),meta:META_MES_$,icon:'🍽️'}))
+  ].sort((a,b)=>b.total-a.total);
+  const emojis=['🥇','🥈','🥉','4️⃣'];const poses=['p1','p2','p3',''];
+  document.getElementById('rank-list').innerHTML=items.map((it,i)=>{
+    const pct=Math.round((it.total/it.meta)*100);
+    const pc=pct>=100?'p-ok':pct>50?'p-warn':'p-off';
+    return `<div class="rank-item"><div class="rank-pos ${poses[i]}">${emojis[i]}</div><div class="pal-icon">${it.icon}</div><div class="rank-info"><div class="rank-name">${it.nombre}</div><div class="rank-det">Meta $${it.meta.toLocaleString()}</div></div><div class="rank-right"><div class="rank-val" style="color:${it.color};">$${it.total.toLocaleString()}</div><div><span class="kc-pill ${pc}">${pct}%</span></div></div></div>`;
+  }).join('');
+  const totalEq=items.reduce((s,it)=>s+it.total,0);
+  setText('rank-best',items[0].total>0?items[0].nombre:'—');
+  setText('rank-best-val',items[0].total>0?'$'+items[0].total.toLocaleString():'Sin datos');
+  setText('rank-total','$'+totalEq.toLocaleString());
+  setText('rank-pct',((totalEq/INC_OBJ)*100).toFixed(0)+'% del incremento objetivo');
+  const hist=Object.keys(localData).sort().map(k=>{
+    const wd=localData[k];if(!wd.saved_total)return '';
+    const n=k.replace('w',''),pct=Math.min(100,Math.round((wd.saved_total/META_SEM)*100));
+    return `<div class="hist-item"><div class="hist-sem">Sem ${n}</div><div class="hist-bar-wrap"><div class="hist-bar" style="width:${pct}%;"></div></div><div class="hist-val">$${Math.round(wd.saved_total).toLocaleString()}</div><div style="font-size:.75rem;">${wd.saved_total>=META_SEM?'✅':'📈'}</div></div>`;
+  }).filter(Boolean).join('');
+  document.getElementById('hist-list').innerHTML=hist||'<div style="font-size:.72rem;color:var(--ink-faint);padding:8px 0;">Guarda semanas para ver historial</div>';
+}
+
+// ══════ ADMIN ══════
+function renderAdminUsers(){
+  const div=document.getElementById('admin-users-list');if(!div)return;
+  div.innerHTML=users.map(u=>`
+    <div class="admin-user-row">
+      <div class="aur-av" style="background:${u.bg};color:${u.color};">${u.nombre.charAt(0)}</div>
+      <input class="aur-name-inp" id="aname-${u.id}" value="${u.nombre}" placeholder="Nombre">
+      <input class="aur-inp" id="apin-${u.id}" value="${u.pin}" placeholder="PIN" maxlength="4" type="password">
+    </div>`).join('');
+}
+window.saveAdminUsers=async()=>{
+  users.forEach(u=>{
+    const n=document.getElementById('aname-'+u.id);const p=document.getElementById('apin-'+u.id);
+    if(n&&n.value.trim())u.nombre=n.value.trim();
+    if(p&&p.value.trim().length===4)u.pin=p.value.trim();
+  });
+  await saveUsers(users);
+  showToast('✓ Guardado en la nube');renderAdminUsers();renderLogin();renderGerPalancas();
+};
+
+// ══════ GUARDAR ══════
+window.guardar=async()=>{
+  const wData=getW();
+  const encP={};
+  PALANCAS.forEach(p=>{const el=document.getElementById('enc-inp-'+p.id);encP[p.id]=el?(parseFloat(el.value)||0):(wData.enc_p?.[p.id]||0);});
+  const mes=JSON.parse(JSON.stringify(wData.mes||{}));
+  if(currentUser?.role==='mes'){
+    const mid=currentUser.id;mes[mid]=mes[mid]||{};
+    PALANCAS.forEach(p=>{const el=document.getElementById('mp-inp-'+p.id);if(el)mes[mid][p.id]=parseFloat(el.value)||0;});
+    const rEl=document.getElementById('mes-rev-inp');if(rEl)mes[mid].reviews=parseFloat(rEl.value)||0;
+  }
+  let enc_reviews=wData.enc_reviews||0;
+  if(currentUser?.role==='enc'||currentUser?.role==='ger'){
+    const rEl=document.getElementById('enc-rev-inp');if(rEl)enc_reviews=parseFloat(rEl.value)||0;
+  }
+  const cart=parseFloat(document.getElementById('ger-cartones')?.value)||wData.cartones||0;
+  const encT=totPesos(encP);
+  let mesT=0;getMesUsers().forEach(m=>mesT+=totPesos(mes[m.id]||{}));
+  const saved_total=BASE+encT+mesT;
+  const payload={enc_p:encP,mes,cartones:cart,enc_reviews,saved_total};
+  localData['w'+week]=payload;
+  await saveFS(week,payload);
+  showToast('✓ Guardado y sincronizado');
+};
+
+// ══════ UTILS ══════
+function setText(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+function setPill(el,txt,cls){if(!el)return;el.textContent=txt;el.className='kc-pill '+cls;}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+window.showToast=showToast;
+
+// ══════ INIT ══════
+async function init(){users=await loadUsers();renderLogin();}
+init();
+</script>
+</body>
+</html>
