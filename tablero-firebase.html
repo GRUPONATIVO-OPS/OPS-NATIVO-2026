@@ -654,7 +654,11 @@ async function saveFS(w,data){
 async function loadFS(w){try{const s=await getDoc(weekRef(w));return s.exists()?s.data():{};}catch(e){return localData['w'+w]||{};}}
 async function saveUsersFS(u){try{await setDoc(usersRef(),{users:u},{merge:true});}catch(e){}}
 async function loadUsersFS(){
-  try{const s=await getDoc(usersRef());if(s.exists()&&s.data().users)return s.data().users;}catch(e){}
+  try{
+    const timeout = new Promise((_,rej)=>setTimeout(()=>rej('timeout'),5000));
+    const snap = await Promise.race([getDoc(usersRef()), timeout]);
+    if(snap && snap.exists && snap.exists() && snap.data().users) return snap.data().users;
+  }catch(e){ console.log('Firebase users load failed, using defaults:', e); }
   return DEFAULT_USERS;
 }
 function subscribeWeek(w){
@@ -1046,7 +1050,18 @@ function setPill(el,txt,cls){if(!el)return;el.textContent=txt;el.className='kc-p
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 window.showToast=showToast;
 
-async function init(){users=await loadUsersFS();renderLogin();}
+async function init(){
+  // Render immediately with defaults so login is never blank
+  renderLogin();
+  // Then try to load from Firebase and update
+  try {
+    const fireUsers = await loadUsersFS();
+    if(fireUsers && fireUsers.length > 0){
+      users = fireUsers;
+      renderLogin();
+    }
+  } catch(e){ console.log('Using default users'); }
+}
 init();
 </script>
 </body>
