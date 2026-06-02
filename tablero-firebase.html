@@ -16,11 +16,16 @@
   --blue:#1a5c8a;--blue-lt:#e8f1f8;
   --purple:#6d3aad;--purple-lt:#f0ebfa;
   --shadow:0 1px 8px rgba(0,0,0,.07);--shadow-md:0 4px 20px rgba(0,0,0,.10);
+  --beer:#e8a020;--beer-lt:#fef6e4;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min-height:100vh;padding-bottom:90px;}
+
+/* SYNC */
 .sync-bar{background:var(--green);color:#fff;text-align:center;font-size:.65rem;font-weight:600;padding:4px;display:none;}
 .sync-bar.show{display:block;}.sync-bar.error{background:var(--red);}.sync-bar.syncing{background:var(--amber);}
+
+/* LOGIN */
 #screen-login{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
 .login-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;letter-spacing:2px;color:var(--ink);margin-bottom:4px;}
 .login-sub{font-size:.72rem;color:var(--ink-dim);margin-bottom:32px;letter-spacing:1px;text-transform:uppercase;}
@@ -43,6 +48,8 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
 .pin-key.del{font-size:.85rem;color:var(--red);}
 .pin-error{text-align:center;font-size:.72rem;color:var(--red);font-weight:600;margin-top:8px;min-height:18px;}
 .login-enter{width:100%;margin-top:12px;padding:13px;background:var(--gold);color:#fff;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:1px;cursor:pointer;}
+
+/* APP */
 #screen-app{display:none;}
 .topbar{background:var(--ink);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
 .tb-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;color:#f7f3ed;letter-spacing:1px;}
@@ -50,39 +57,53 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
 .tb-user{font-size:.65rem;background:rgba(255,255,255,.12);color:#f7f3ed;padding:3px 8px;border-radius:20px;font-weight:600;}
 .tb-week{font-size:.65rem;background:var(--gold);color:#fff;padding:3px 8px;border-radius:20px;font-weight:700;}
 .tb-logout{font-size:.65rem;background:var(--red);color:#fff;padding:3px 8px;border-radius:20px;font-weight:700;cursor:pointer;}
-.role-bar{display:flex;background:var(--bg2);border-bottom:2px solid var(--bg3);}
-.role-tab{flex:1;padding:10px 4px;text-align:center;font-size:.63rem;font-weight:700;font-family:'Syne',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-dim);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;}
+.role-bar{display:flex;background:var(--bg2);border-bottom:2px solid var(--bg3);overflow-x:auto;}
+.role-tab{flex:1;min-width:60px;padding:10px 4px;text-align:center;font-size:.6rem;font-weight:700;font-family:'Syne',sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-dim);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
 .role-tab.active{color:var(--ink);border-bottom-color:var(--gold);background:var(--bg);}
 .role-tab .ri{font-size:.9rem;display:block;margin-bottom:1px;}
 .panel{display:none;padding:14px 14px 0;animation:fadeUp .25s ease;}
 .panel.active{display:block;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.week-nav{display:flex;align-items:center;gap:8px;background:var(--white);border-radius:10px;padding:9px 12px;box-shadow:var(--shadow);margin-bottom:12px;border:1px solid rgba(0,0,0,.05);}
+
+/* WEEK NAV */
+.week-nav{background:var(--white);border-radius:12px;padding:10px 14px;box-shadow:var(--shadow);margin-bottom:12px;border:1px solid rgba(0,0,0,.05);}
+.wn-top{display:flex;align-items:center;gap:8px;}
 .wn-btn{background:var(--bg2);border:none;border-radius:6px;width:28px;height:28px;font-size:.9rem;cursor:pointer;color:var(--ink);display:flex;align-items:center;justify-content:center;}
-.wn-c{flex:1;text-align:center;}.wn-lbl{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;}
+.wn-c{flex:1;text-align:center;}
+.wn-lbl{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;}
 .wn-sub{font-size:.6rem;color:var(--ink-dim);margin-top:1px;}
+.wn-dates{text-align:center;font-size:.62rem;color:var(--gold);font-weight:600;margin-top:6px;padding-top:6px;border-top:1px solid var(--bg2);}
+
+/* LEVEL HDR */
 .lvl-hdr{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;margin-bottom:12px;}
 .lh-ger{background:var(--ink);color:#f7f3ed;}.lh-enc{background:#3d2010;color:#f7f3ed;}.lh-mes{background:#1e3a5f;color:#f7f3ed;}
 .lh-icon{font-size:1.2rem;}.lh-info{flex:1;}
 .lh-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;}
 .lh-sub{font-size:.6rem;opacity:.65;margin-top:1px;}
 .lh-tag{font-size:.6rem;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.15);white-space:nowrap;}
+
+/* KPI */
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
 .kpi-grid.three{grid-template-columns:1fr 1fr 1fr;}
 .kpi-card{background:var(--white);border-radius:10px;padding:11px 12px;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.05);position:relative;overflow:hidden;}
 .kpi-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ac,var(--gold));}
-.kpi-card.ac-gold{--ac:var(--gold)}.kpi-card.ac-green{--ac:var(--green)}.kpi-card.ac-blue{--ac:var(--blue)}.kpi-card.ac-amber{--ac:var(--amber)}.kpi-card.ac-red{--ac:var(--red)}.kpi-card.ac-purple{--ac:var(--purple)}
+.kpi-card.ac-gold{--ac:var(--gold)}.kpi-card.ac-green{--ac:var(--green)}.kpi-card.ac-blue{--ac:var(--blue)}.kpi-card.ac-amber{--ac:var(--amber)}.kpi-card.ac-red{--ac:var(--red)}.kpi-card.ac-purple{--ac:var(--purple)}.kpi-card.ac-beer{--ac:var(--beer)}
 .kc-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-dim);font-weight:600;margin-bottom:3px;}
 .kc-val{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;line-height:1;}
 .kc-sub{font-size:.6rem;color:var(--ink-faint);margin-top:3px;}
 .kc-pill{display:inline-block;font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:4px;}
 .p-ok{background:var(--green-lt);color:var(--green)}.p-warn{background:var(--amber-lt);color:var(--amber)}.p-off{background:var(--red-lt);color:var(--red)}.p-neu{background:var(--bg2);color:var(--ink-dim)}
+
+/* CARDS */
 .inp-card{background:var(--white);border-radius:12px;padding:13px;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.05);margin-bottom:10px;}
 .ic-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .ic-lbl{font-size:.6rem;text-transform:uppercase;letter-spacing:1px;color:var(--ink-dim);font-weight:600;display:block;margin-bottom:3px;}
 .ic-inp{width:100%;background:var(--bg);border:1.5px solid var(--bg2);color:var(--ink);font-family:'Epilogue',sans-serif;font-size:.88rem;font-weight:500;padding:8px 11px;border-radius:8px;outline:none;transition:border-color .2s;}
 .ic-inp:focus{border-color:var(--gold);background:var(--white);}
 .ic-inp.ro-gold{color:var(--gold);font-weight:700;background:var(--gold-lt);border-color:transparent;pointer-events:none;}
+.ic-inp.ro-green{color:var(--green);font-weight:700;background:var(--green-lt);border-color:transparent;pointer-events:none;}
+
+/* PALANCA */
 .pal-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--bg);}
 .pal-row:last-child{border-bottom:none;}
 .pal-icon{font-size:.95rem;width:22px;text-align:center;}
@@ -96,16 +117,62 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
 .pal-inp:focus{border-color:var(--gold);background:var(--white);}
 .pal-sub{font-size:.58rem;color:var(--green);font-weight:600;text-align:right;}
 .pal-meta-chip{font-size:.56rem;background:var(--bg2);color:var(--ink-dim);padding:1px 5px;border-radius:6px;display:inline-block;}
-.rev-card{background:var(--white);border-radius:12px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px;}
-.rev-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-.rev-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;}
-.stars-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
-.star-box{background:var(--bg);border-radius:8px;padding:8px;text-align:center;}
-.sb-val{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;}
-.sb-lbl{font-size:.56rem;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;}
-.team-banner{background:var(--gold-lt);border:1px solid var(--gold-bd);border-radius:10px;padding:11px 13px;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
-.tb2-icon{font-size:1.2rem;}.tb2-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:var(--gold);}
-.tb2-val{font-size:.68rem;color:var(--ink-dim);margin-top:2px;}
+
+/* MUNDIAL */
+.mundial-header{background:linear-gradient(135deg,#1a1200,#2a1f00);border-radius:12px;padding:14px;margin-bottom:10px;color:#f7f3ed;border:1px solid var(--beer);}
+.mh-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.mh-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--beer);letter-spacing:1px;}
+.mh-sub{font-size:.62rem;opacity:.7;}
+.mh-kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px;}
+.mhk{background:rgba(255,255,255,.08);border-radius:8px;padding:8px;text-align:center;}
+.mhk-val{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--beer);}
+.mhk-lbl{font-size:.56rem;opacity:.65;margin-top:2px;text-transform:uppercase;letter-spacing:.8px;}
+
+.partido-card{background:var(--white);border-radius:12px;padding:13px;box-shadow:var(--shadow);margin-bottom:8px;border-left:4px solid var(--ac,var(--bg3));}
+.partido-card.premium{--ac:#c9a84c;border-left-color:#c9a84c;background:linear-gradient(135deg,#fffdf5,#fff);}
+.partido-card.medio{--ac:#3498db;border-left-color:#3498db;background:linear-gradient(135deg,#f0f7ff,#fff);}
+.partido-card.bajo{--ac:#2ecc71;border-left-color:#2ecc71;background:linear-gradient(135deg,#f0fff5,#fff);}
+.pc-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.pc-badge{font-size:.55rem;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.8px;}
+.badge-premium{background:#c9a84c;color:#fff;}
+.badge-medio{background:#3498db;color:#fff;}
+.badge-bajo{background:#2ecc71;color:#fff;}
+.pc-match{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;flex:1;}
+.pc-fecha{font-size:.6rem;color:var(--ink-dim);}
+.pc-promo-info{font-size:.62rem;color:var(--ink-dim);margin-bottom:8px;padding:5px 8px;background:var(--bg);border-radius:6px;}
+.pc-inputs{display:grid;gap:6px;}
+.pc-row{display:flex;align-items:center;gap:8px;}
+.pc-row-lbl{font-size:.62rem;color:var(--ink-dim);flex:1;}
+.pc-inp{width:70px;background:var(--bg);border:1.5px solid var(--bg2);color:var(--ink);font-size:.8rem;padding:5px 8px;border-radius:6px;outline:none;text-align:center;font-family:'Epilogue',sans-serif;}
+.pc-inp:focus{border-color:var(--beer);}
+.pc-auto{font-size:.65rem;font-weight:700;color:var(--beer);min-width:60px;text-align:right;}
+.pc-total{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--bg2);}
+.pc-total-lbl{font-size:.65rem;font-weight:700;color:var(--ink-dim);}
+.pc-total-val{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--beer);}
+
+/* MESERO MUNDIAL */
+.mes-mundial-card{background:linear-gradient(135deg,#1a1200,#1c1c1c);border-radius:12px;padding:13px;margin-bottom:8px;border:1px solid var(--beer);color:#f7f3ed;}
+.mmc-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;color:var(--beer);margin-bottom:4px;}
+.mmc-sub{font-size:.6rem;opacity:.6;margin-bottom:10px;}
+.mmc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.mmc-stat{background:rgba(255,255,255,.06);border-radius:8px;padding:8px;text-align:center;}
+.mmc-val{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--beer);}
+.mmc-lbl{font-size:.55rem;opacity:.6;margin-top:2px;}
+.mmc-inp{width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);color:#f7f3ed;font-size:.82rem;padding:6px 8px;border-radius:6px;outline:none;text-align:center;font-family:'Epilogue',sans-serif;margin-top:4px;}
+.mmc-inp:focus{border-color:var(--beer);}
+
+/* TOTAL BANNER */
+.total-banner{background:var(--ink);color:#f7f3ed;border-radius:12px;padding:14px;margin-bottom:10px;}
+.tot-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.tot-lbl{font-size:.68rem;opacity:.7;}
+.tot-val{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;}
+.tot-divider{height:1px;background:rgba(255,255,255,.15);margin:6px 0;}
+.grand-total{background:linear-gradient(135deg,var(--gold),#d4a017);border-radius:12px;padding:14px;margin-bottom:10px;color:#fff;}
+.gt-lbl{font-size:.68rem;opacity:.85;margin-bottom:4px;}
+.gt-val{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;letter-spacing:1px;}
+.gt-sub{font-size:.62rem;opacity:.75;margin-top:4px;}
+
+/* ADMIN */
 .admin-section{background:var(--white);border-radius:12px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px;}
 .admin-title{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ink-dim);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--bg2);}
 .admin-user-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bg);}
@@ -116,15 +183,25 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
 .aur-inp{width:70px;background:var(--bg);border:1.5px solid var(--bg2);font-size:.8rem;padding:5px 8px;border-radius:6px;outline:none;text-align:center;font-family:'Epilogue',sans-serif;}
 .aur-inp:focus{border-color:var(--gold);}
 .save-admin-btn{width:100%;padding:10px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:1px;cursor:pointer;margin-top:10px;}
+
+/* RANK */
 .rank-list{display:flex;flex-direction:column;gap:6px;}
 .rank-item{display:flex;align-items:center;gap:10px;padding:10px 13px;background:var(--white);border-radius:10px;box-shadow:var(--shadow);}
 .rank-pos{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;min-width:22px;text-align:center;}
 .rank-pos.p1{color:#c9a84c}.rank-pos.p2{color:#909090}.rank-pos.p3{color:#b07040}
 .rank-info{flex:1;}.rank-name{font-weight:600;font-size:.8rem;}.rank-det{font-size:.6rem;color:var(--ink-dim);}
 .rank-right{text-align:right;}.rank-val{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;}
+
+/* MISC */
 .sec-title{font-family:'Syne',sans-serif;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-dim);margin:14px 0 8px;display:flex;align-items:center;gap:6px;}
 .sec-title::after{content:'';flex:1;height:1px;background:var(--bg3);}
 .div{height:1px;background:var(--bg2);margin:10px 0;}
+.rev-card{background:var(--white);border-radius:12px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px;}
+.stars-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
+.star-box{background:var(--bg);border-radius:8px;padding:8px;text-align:center;}
+.sb-val{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;}
+.sb-lbl{font-size:.56rem;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;}
+.team-banner{background:var(--gold-lt);border:1px solid var(--gold-bd);border-radius:10px;padding:11px 13px;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
 .fab{position:fixed;bottom:18px;right:14px;background:var(--gold);color:#fff;border:none;border-radius:50px;padding:12px 20px;font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:1px;cursor:pointer;box-shadow:0 4px 18px rgba(184,134,11,.4);display:flex;align-items:center;gap:6px;z-index:300;transition:transform .15s;}
 .fab:active{transform:scale(.95);}
 .toast{position:fixed;bottom:68px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green);color:#fff;font-weight:600;padding:9px 20px;border-radius:8px;font-size:.75rem;transition:all .3s;z-index:999;opacity:0;pointer-events:none;white-space:nowrap;}
@@ -135,12 +212,8 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
 .hist-bar-wrap{flex:1;height:4px;background:var(--bg2);border-radius:2px;overflow:hidden;}
 .hist-bar{height:100%;background:var(--gold);border-radius:2px;}
 .hist-val{font-size:.7rem;font-weight:600;min-width:70px;text-align:right;}
-/* TOTAL BANNER */
-.total-banner{background:var(--ink);color:#f7f3ed;border-radius:12px;padding:14px;margin-bottom:10px;display:flex;flex-direction:column;gap:6px;}
-.tot-row{display:flex;justify-content:space-between;align-items:center;}
-.tot-lbl{font-size:.68rem;opacity:.7;}
-.tot-val{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;}
-.tot-divider{height:1px;background:rgba(255,255,255,.15);margin:4px 0;}
+.no-mundial{text-align:center;padding:24px 16px;color:var(--ink-dim);font-size:.8rem;}
+.no-mundial .nm-icon{font-size:2rem;margin-bottom:8px;}
 </style>
 </head>
 <body>
@@ -186,45 +259,58 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
   <!-- GERENTE -->
   <div class="panel" id="panel-ger">
     <div class="week-nav">
-      <button class="wn-btn" onclick="changeWeek(-1)">‹</button>
-      <div class="wn-c"><div class="wn-lbl" id="wn-ger-l">Semana 1</div><div class="wn-sub" id="wn-ger-s">Foco: Cafés & Postres</div></div>
-      <button class="wn-btn" onclick="changeWeek(1)">›</button>
+      <div class="wn-top">
+        <button class="wn-btn" onclick="changeWeek(-1)">‹</button>
+        <div class="wn-c"><div class="wn-lbl" id="wn-ger-l">Semana 1</div><div class="wn-sub" id="wn-ger-s">Ventas sugestivas</div></div>
+        <button class="wn-btn" onclick="changeWeek(1)">›</button>
+      </div>
+      <div class="wn-dates" id="wn-ger-dates">📅 2 Jun — 8 Jun 2026</div>
     </div>
     <div class="lvl-hdr lh-ger">
       <div class="lh-icon">👔</div>
       <div class="lh-info"><div class="lh-title" id="ger-nombre-hdr">Gerente de Operaciones</div><div class="lh-sub">Vista completa · Tiempo real</div></div>
       <div class="lh-tag" id="ger-tag">—</div>
     </div>
+
+    <!-- GRAND TOTAL -->
+    <div class="grand-total">
+      <div class="gt-lbl">💰 Ingreso total del negocio esta semana</div>
+      <div class="gt-val" id="ger-grand-total">$114,000</div>
+      <div class="gt-sub" id="ger-grand-sub">Venta base + sugestivos + mundial</div>
+    </div>
+
     <div class="kpi-grid">
-      <div class="kpi-card ac-gold"><div class="kc-lbl">Venta Semana</div><div class="kc-val" id="ger-venta">$114,000</div><div class="kc-sub">Base: $114,000</div></div>
+      <div class="kpi-card ac-gold"><div class="kc-lbl">Venta Normal</div><div class="kc-val" id="ger-venta">$114,000</div><div class="kc-sub">Base + sugestivos</div></div>
       <div class="kpi-card ac-green"><div class="kc-lbl">Incremento</div><div class="kc-val" id="ger-inc">$0</div><div class="kc-pill p-neu" id="ger-inc-pill">Sin ventas</div></div>
     </div>
     <div class="kpi-grid three">
       <div class="kpi-card ac-blue"><div class="kc-lbl">% Avance</div><div class="kc-val" id="ger-pct">0%</div><div class="kc-sub">Meta +25%</div></div>
-      <div class="kpi-card ac-amber"><div class="kc-lbl">vs PE</div><div class="kc-val" id="ger-vspe">+$10K</div><div class="kc-sub">PE $104K</div></div>
-      <div class="kpi-card ac-gold"><div class="kc-lbl">🍺 Cerveza</div><div class="kc-val" id="ger-cerv">$0</div><div class="kc-sub" id="ger-cerv-sub">Base 12 cart.</div></div>
+      <div class="kpi-card ac-amber"><div class="kc-val" id="ger-vspe" style="font-size:1rem;">+$10K</div><div class="kc-sub">vs PE $104K</div></div>
+      <div class="kpi-card ac-beer"><div class="kc-lbl">🏆 Mundial</div><div class="kc-val" id="ger-mundial-total">$0</div><div class="kc-sub">Esta semana</div></div>
     </div>
-    <div class="sec-title"><span>⚡</span>Palancas acumuladas</div>
+
+    <div class="sec-title"><span>⚡</span>Palancas del equipo</div>
     <div class="inp-card" id="ger-palancas"></div>
     <div class="sec-title"><span>👥</span>Desempeño individual</div>
     <div id="ger-equipo"></div>
-    <div class="sec-title"><span>⭐</span>Reseñas Google · Meta 30/sem</div>
+
+    <!-- MUNDIAL GERENTE -->
+    <div id="ger-mundial-section"></div>
+
+    <div class="sec-title"><span>⭐</span>Reseñas Google</div>
     <div class="rev-card">
-      <div class="rev-hdr"><div style="font-size:1.3rem;">🔍</div><div><div class="rev-title">Total equipo</div></div><div style="margin-left:auto;"><div class="kc-pill p-neu" id="ger-rev-pill">0/30</div></div></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;">🔍 Google Maps</div>
+        <div class="kc-pill p-neu" id="ger-rev-pill">0/30</div>
+      </div>
       <div class="stars-grid">
-        <div class="star-box"><div class="sb-val" id="ger-rev-total">0</div><div class="sb-lbl">Esta semana</div></div>
-        <div class="star-box"><div class="sb-val" id="ger-rev-pct">0%</div><div class="sb-lbl">de meta (30)</div></div>
+        <div class="star-box"><div class="sb-val" id="ger-rev-total">0</div><div class="sb-lbl">Semana</div></div>
+        <div class="star-box"><div class="sb-val" id="ger-rev-pct">0%</div><div class="sb-lbl">de meta 30</div></div>
         <div class="star-box"><div class="sb-val" id="ger-rev-acum">0</div><div class="sb-lbl">Acumuladas</div></div>
       </div>
-      <div id="ger-rev-detalle" style="margin-top:8px;"></div>
+      <div id="ger-rev-detalle"></div>
     </div>
-    <div class="sec-title"><span>🍺</span>Cerveza Mundial</div>
-    <div class="inp-card">
-      <div class="ic-grid">
-        <div><label class="ic-lbl">Cartones vendidos</label><input class="ic-inp" type="number" id="ger-cartones" placeholder="12 base" oninput="calcCerveza()"></div>
-        <div><label class="ic-lbl">$ auto</label><input class="ic-inp ro-gold" readonly id="ger-cerv-pesos"></div>
-      </div>
-    </div>
+
     <div class="sec-title"><span>⚙️</span>Administración</div>
     <div class="admin-section">
       <div class="admin-title">Nombres y PINs del equipo</div>
@@ -236,74 +322,75 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
   <!-- ENCARGADO -->
   <div class="panel" id="panel-enc">
     <div class="week-nav">
-      <button class="wn-btn" onclick="changeWeek(-1)">‹</button>
-      <div class="wn-c"><div class="wn-lbl" id="wn-enc-l">Semana 1</div><div class="wn-sub" id="wn-enc-s">Foco: Cafés & Postres</div></div>
-      <button class="wn-btn" onclick="changeWeek(1)">›</button>
+      <div class="wn-top">
+        <button class="wn-btn" onclick="changeWeek(-1)">‹</button>
+        <div class="wn-c"><div class="wn-lbl" id="wn-enc-l">Semana 1</div><div class="wn-sub" id="wn-enc-s">Ventas sugestivas</div></div>
+        <button class="wn-btn" onclick="changeWeek(1)">›</button>
+      </div>
+      <div class="wn-dates" id="wn-enc-dates">📅 2 Jun — 8 Jun 2026</div>
     </div>
     <div class="lvl-hdr lh-enc">
       <div class="lh-icon">📋</div>
       <div class="lh-info"><div class="lh-title" id="enc-nombre-hdr">Encargado de Turno</div><div class="lh-sub">Tu meta + equipo en tiempo real</div></div>
       <div class="lh-tag" id="enc-tag">—</div>
     </div>
-
-    <!-- TOTAL RESTAURANTE visible para encargado -->
     <div class="total-banner">
-      <div class="tot-row"><span class="tot-lbl">Venta total restaurante esta semana</span></div>
-      <div class="tot-row"><span class="tot-val" id="enc-total-rest">$114,000</span><span class="kc-pill p-neu" id="enc-total-pill">0%</span></div>
+      <div class="tot-row"><span class="tot-lbl">Venta total restaurante</span><span class="kc-pill p-neu" id="enc-total-pill">0%</span></div>
+      <div class="tot-row"><span class="tot-val" id="enc-total-rest">$114,000</span></div>
       <div class="tot-divider"></div>
-      <div class="tot-row"><span class="tot-lbl">Tu aporte</span><span style="font-size:.78rem;font-weight:600;" id="enc-aporte-lbl">$0</span></div>
-      <div class="tot-row"><span class="tot-lbl">Equipo meseros</span><span style="font-size:.78rem;font-weight:600;" id="enc-equipo-aporte">$0</span></div>
+      <div class="tot-row"><span class="tot-lbl">Tu aporte</span><span style="font-size:.82rem;font-weight:600;" id="enc-aporte-lbl">$0</span></div>
+      <div class="tot-row"><span class="tot-lbl">Equipo meseros</span><span style="font-size:.82rem;font-weight:600;" id="enc-equipo-aporte">$0</span></div>
     </div>
-
     <div class="kpi-grid">
-      <div class="kpi-card ac-gold"><div class="kc-lbl">Tu meta semana $</div><div class="kc-val" id="enc-meta-val">$9,975</div><div class="kc-sub">35% del objetivo</div></div>
-      <div class="kpi-card ac-green"><div class="kc-lbl">Tu venta real $</div><div class="kc-val" id="enc-real-val">$0</div><div class="kc-pill p-neu" id="enc-pill">Sin datos</div></div>
+      <div class="kpi-card ac-gold"><div class="kc-lbl">Tu meta $</div><div class="kc-val" id="enc-meta-val">$9,975</div><div class="kc-sub">35% del objetivo</div></div>
+      <div class="kpi-card ac-green"><div class="kc-lbl">Tu venta real</div><div class="kc-val" id="enc-real-val">$0</div><div class="kc-pill p-neu" id="enc-pill">Sin datos</div></div>
     </div>
     <div class="kpi-grid three">
-      <div class="kpi-card ac-blue"><div class="kc-lbl">% logrado</div><div class="kc-val" id="enc-pct-val">0%</div><div class="kc-sub">Tu cuota</div></div>
-      <div class="kpi-card ac-amber"><div class="kc-lbl">Falta $</div><div class="kc-val" id="enc-falta-val">—</div><div class="kc-sub">para tu meta</div></div>
-      <div class="kpi-card ac-purple"><div class="kc-lbl">⭐ Reseñas</div><div class="kc-val" id="enc-rev-val">0/11</div><div class="kc-sub">tu meta 11/sem</div></div>
+      <div class="kpi-card ac-blue"><div class="kc-lbl">% logrado</div><div class="kc-val" id="enc-pct-val">0%</div></div>
+      <div class="kpi-card ac-amber"><div class="kc-lbl">Falta</div><div class="kc-val" id="enc-falta-val" style="font-size:1rem;">—</div></div>
+      <div class="kpi-card ac-purple"><div class="kc-lbl">⭐ Reseñas</div><div class="kc-val" id="enc-rev-kpi">0/11</div></div>
     </div>
     <div class="sec-title"><span>⚡</span>Tu captura (piezas → $ auto)</div>
     <div class="inp-card" id="enc-palancas"></div>
-    <div class="sec-title"><span>⭐</span>Tus reseñas Google · Meta 11</div>
+    <div class="sec-title"><span>⭐</span>Tus reseñas · Meta 11/sem</div>
     <div class="rev-card">
       <div class="stars-grid">
         <div class="star-box"><div class="sb-val" id="enc-rev-esta">0</div><div class="sb-lbl">Esta semana</div></div>
         <div class="star-box"><div class="sb-val">11</div><div class="sb-lbl">Tu meta</div></div>
         <div class="star-box"><div class="sb-val" id="enc-rev-pct">0%</div><div class="sb-lbl">Logrado</div></div>
       </div>
-      <label class="ic-lbl">Reseñas que pediste esta semana</label>
+      <label class="ic-lbl">Reseñas pedidas esta semana</label>
       <input class="ic-inp" type="number" id="enc-rev-inp" placeholder="0" oninput="calcEncReviews()" style="max-width:120px;">
     </div>
+    <!-- MUNDIAL ENCARGADO: solo resumen cerveza -->
+    <div id="enc-mundial-section"></div>
     <div class="sec-title"><span>👥</span>Avance de tu equipo</div>
     <div class="inp-card" id="enc-equipo"></div>
-    <div class="team-banner">
-      <div class="tb2-icon">🎯</div>
-      <div><div class="tb2-title">Meta del restaurante</div><div class="tb2-val">$142,500 → +25% sobre base</div></div>
-    </div>
   </div>
 
   <!-- MESEROS -->
   <div class="panel" id="panel-mes">
     <div class="week-nav">
-      <button class="wn-btn" onclick="changeWeek(-1)">‹</button>
-      <div class="wn-c"><div class="wn-lbl" id="wn-mes-l">Semana 1</div><div class="wn-sub" id="wn-mes-s">Foco: Cafés & Postres</div></div>
-      <button class="wn-btn" onclick="changeWeek(1)">›</button>
+      <div class="wn-top">
+        <button class="wn-btn" onclick="changeWeek(-1)">‹</button>
+        <div class="wn-c"><div class="wn-lbl" id="wn-mes-l">Semana 1</div><div class="wn-sub" id="wn-mes-s">Mis metas</div></div>
+        <button class="wn-btn" onclick="changeWeek(1)">›</button>
+      </div>
+      <div class="wn-dates" id="wn-mes-dates">📅 2 Jun — 8 Jun 2026</div>
     </div>
     <div class="lvl-hdr lh-mes">
       <div class="lh-icon">🍽️</div>
-      <div class="lh-info"><div class="lh-title" id="mes-nombre-hdr">Mis metas</div><div class="lh-sub">Ingresa piezas · el sistema calcula el $</div></div>
+      <div class="lh-info"><div class="lh-title" id="mes-nombre-hdr">Mis metas</div><div class="lh-sub">Piezas · el sistema calcula el $</div></div>
       <div class="lh-tag" id="mes-tag">—</div>
     </div>
     <div class="kpi-grid">
-      <div class="kpi-card ac-blue"><div class="kc-lbl">Piezas esta semana</div><div class="kc-val" id="mes-piezas-total">0</div><div class="kc-sub" id="mes-piezas-meta">Meta: 0 piezas</div></div>
+      <div class="kpi-card ac-blue"><div class="kc-lbl">Piezas semana</div><div class="kc-val" id="mes-piezas-total">0</div><div class="kc-sub" id="mes-piezas-meta">Meta: 0 pzas</div></div>
       <div class="kpi-card ac-green"><div class="kc-lbl">% de tu meta</div><div class="kc-val" id="mes-pct">0%</div><div class="kc-pill p-neu" id="mes-pill">Sin datos</div></div>
     </div>
     <div class="kpi-grid three">
-      <div class="kpi-card ac-gold"><div class="kc-lbl">☕ Cafés</div><div class="kc-val" id="mes-kpi-cafes">0</div><div class="kc-sub" id="mes-kpi-cafes-m">meta 0</div></div>
-      <div class="kpi-card ac-amber"><div class="kc-lbl">🍮 Postres</div><div class="kc-val" id="mes-kpi-postres">0</div><div class="kc-sub" id="mes-kpi-postres-m">meta 0</div></div>
-      <div class="kpi-card ac-purple"><div class="kc-lbl">🥃 Digestivos</div><div class="kc-val" id="mes-kpi-digestivos">0</div><div class="kc-sub" id="mes-kpi-digestivos-m">meta 0</div></div>
+      <div class="kpi-card ac-gold"><div class="kc-lbl">☕</div><div class="kc-val" id="mes-kpi-cafes">0</div><div class="kc-sub" id="mes-kpi-cafes-m">meta 0</div></div>
+      <div class="kpi-card ac-amber"><div class="kc-lbl">🍮</div><div class="kc-val" id="mes-kpi-postres">0</div><div class="kc-sub" id="mes-kpi-postres-m">meta 0</div></div>
+      <div class="kpi-card ac-purple"><div class="kc-lbl">🥃</div><div class="kc-val" id="mes-kpi-digestivos">0</div><div class="kc-sub" id="mes-kpi-digestivos-m">meta 0</div></div>
     </div>
     <div class="kpi-grid">
       <div class="kpi-card ac-purple"><div class="kc-lbl">🌵 Mezcales</div><div class="kc-val" id="mes-kpi-mezcales">0</div><div class="kc-sub" id="mes-kpi-mezcales-m">meta 0</div></div>
@@ -311,24 +398,26 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
     </div>
     <div class="sec-title"><span>⚡</span>Captura tus piezas</div>
     <div class="inp-card" id="mes-palancas"></div>
-    <div class="sec-title"><span>⭐</span>Tu meta de reseñas Google · Meta 6</div>
+    <div class="sec-title"><span>⭐</span>Tu meta reseñas · 6/sem</div>
     <div class="rev-card">
       <div class="stars-grid">
         <div class="star-box"><div class="sb-val" id="mes-rev-esta">0</div><div class="sb-lbl">Esta semana</div></div>
         <div class="star-box"><div class="sb-val">6</div><div class="sb-lbl">Tu meta</div></div>
         <div class="star-box"><div class="sb-val" id="mes-rev-pct">0%</div><div class="sb-lbl">Logrado</div></div>
       </div>
-      <label class="ic-lbl">Reseñas que pediste esta semana</label>
+      <label class="ic-lbl">Reseñas que pediste</label>
       <input class="ic-inp" type="number" id="mes-rev-inp" placeholder="0" oninput="calcMesReviews()" style="max-width:120px;">
-      <div style="margin-top:8px;font-size:.65rem;color:var(--ink-dim);">💡 Pide una reseña al cerrar cada mesa. Son solo 1-2 por turno.</div>
+      <div style="margin-top:8px;font-size:.63rem;color:var(--ink-dim);">💡 1-2 por turno al cerrar cada mesa</div>
     </div>
+    <!-- MUNDIAL MESERO: solo sus cubetas/promos -->
+    <div id="mes-mundial-section"></div>
   </div>
 
   <!-- RANKING -->
   <div class="panel" id="panel-rank">
     <div class="lvl-hdr" style="background:#1a3320;color:#f7f3ed;margin-bottom:12px;">
       <div class="lh-icon">🏆</div>
-      <div class="lh-info"><div class="lh-title">Ranking Semanal</div><div class="lh-sub">Tiempo real · se actualiza al guardar</div></div>
+      <div class="lh-info"><div class="lh-title">Ranking Semanal</div><div class="lh-sub">Tiempo real</div></div>
     </div>
     <div class="kpi-grid" style="margin-bottom:14px;">
       <div class="kpi-card ac-gold"><div class="kc-lbl">🥇 Mejor</div><div class="kc-val" id="rank-best">—</div><div class="kc-sub" id="rank-best-val">Sin datos</div></div>
@@ -336,7 +425,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
     </div>
     <div class="rank-list" id="rank-list"></div>
     <div class="div" style="margin:14px 0;"></div>
-    <div class="sec-title"><span>📈</span>Historial restaurante</div>
+    <div class="sec-title"><span>📈</span>Historial</div>
     <div class="inp-card"><div id="hist-list"></div></div>
   </div>
 </div>
@@ -359,9 +448,62 @@ const firebaseConfig = {
 const fireApp = initializeApp(firebaseConfig);
 const db = getFirestore(fireApp);
 
-// ══════ CONSTANTES ══════
+// ══════ SEMANAS ══════
+const SEMANAS = [
+  { label:'Semana 1', sub:'Ventas sugestivas', dates:'2 Jun — 8 Jun 2026', mundial:false },
+  { label:'Semana 2', sub:'Mundial arranca · Ventas sugestivas', dates:'9 Jun — 15 Jun 2026', mundial:true },
+  { label:'Semana 3', sub:'Fase de grupos · Ventas sugestivas', dates:'16 Jun — 22 Jun 2026', mundial:true },
+  { label:'Semana 4', sub:'Fase de grupos · Ventas sugestivas', dates:'23 Jun — 29 Jun 2026', mundial:true },
+  { label:'Semana 5', sub:'Octavos · Ventas sugestivas', dates:'30 Jun — 6 Jul 2026', mundial:true },
+  { label:'Semana 6', sub:'Cuartos · Ventas sugestivas', dates:'7 Jul — 13 Jul 2026', mundial:true },
+  { label:'Semana 7', sub:'Semis & Final · Ventas sugestivas', dates:'14 Jul — 20 Jul 2026', mundial:true },
+];
+
+// ══════ PARTIDOS POR SEMANA ══════
+// tipo: premium=cubeta $300, medio=ilimitada 2h $200, bajo=ilimitada MT $100
+// proyeccion: cartones estimados
+const PARTIDOS = {
+  2: [
+    { match:'🇲🇽 México vs Sudáfrica', fecha:'Jue 11 Jun · 1:00 PM', tipo:'premium', cart_proy:20, cubetas_proy:47, ind_proy:50 },
+    { match:'🇺🇸 EUA vs Paraguay',      fecha:'Vie 12 Jun · 7:00 PM', tipo:'bajo',    cart_proy:6,  ilmt_proy:30 },
+    { match:'🇧🇷 Brasil vs Marruecos',  fecha:'Sáb 13 Jun · 4:00 PM', tipo:'medio',   cart_proy:11, il2h_proy:40 },
+    { match:'🇦🇷 Argentina vs Argelia', fecha:'Dom 14 Jun · 7:00 PM', tipo:'medio',   cart_proy:11, il2h_proy:38 },
+  ],
+  3: [
+    { match:'🇪🇸 España vs Cabo Verde',  fecha:'Lun 15 Jun · 2:00 PM', tipo:'bajo',  cart_proy:5,  ilmt_proy:25 },
+    { match:'🇫🇷 Francia vs Senegal',    fecha:'Mar 16 Jun · 1:00 PM', tipo:'bajo',  cart_proy:5,  ilmt_proy:25 },
+    { match:'🇦🇷 Argentina vs Argelia',  fecha:'Mar 16 Jun · 7:00 PM', tipo:'medio', cart_proy:11, il2h_proy:40 },
+    { match:'🏴󠁧󠁢󠁳󠁣󠁴󠁿 Escocia vs Brasil',   fecha:'Jue 18 Jun · 5:00 PM', tipo:'medio', cart_proy:10, il2h_proy:35 },
+    { match:'🇲🇽 México vs Corea del Sur',fecha:'Jue 18 Jun · 7:00 PM', tipo:'premium',cart_proy:20,cubetas_proy:47,ind_proy:50},
+    { match:'🇪🇸 España vs Uruguay',     fecha:'Vie 19 Jun · 6:00 PM', tipo:'medio', cart_proy:10, il2h_proy:35 },
+    { match:'🇪🇸 España vs Arabia Saudita',fecha:'Dom 21 Jun · 7:00 PM',tipo:'medio', cart_proy:10, il2h_proy:35 },
+  ],
+  4: [
+    { match:'🇦🇷 Argentina vs Austria',  fecha:'Lun 22 Jun · 7:00 PM', tipo:'medio',   cart_proy:11, il2h_proy:40 },
+    { match:'🇧🇷 Brasil vs Haití',       fecha:'Mié 24 Jun · 6:00 PM', tipo:'medio',   cart_proy:10, il2h_proy:35 },
+    { match:'🇲🇽 México vs Rep. Checa',  fecha:'Mié 24 Jun · 7:00 PM', tipo:'premium', cart_proy:20, cubetas_proy:47, ind_proy:50 },
+    { match:'🇺🇾 Uruguay vs España',     fecha:'Vie 26 Jun · 6:00 PM', tipo:'medio',   cart_proy:10, il2h_proy:35 },
+  ],
+  5: [
+    { match:'⚽ Octavos de Final (x4)',  fecha:'28 Jun - 3 Jul · Varios horarios', tipo:'medio', cart_proy:44, il2h_proy:140 },
+  ],
+  6: [
+    { match:'⚽ Octavos de Final (x4)',  fecha:'4-7 Jul · Varios horarios', tipo:'medio', cart_proy:44, il2h_proy:140 },
+    { match:'⚽ Cuartos de Final (x2)',  fecha:'9-11 Jul · Varios horarios', tipo:'medio', cart_proy:22, il2h_proy:70 },
+  ],
+  7: [
+    { match:'⚽ Semifinal 1',           fecha:'Mar 14 Jul · 7:00 PM', tipo:'premium', cart_proy:20, cubetas_proy:47, ind_proy:50 },
+    { match:'⚽ Semifinal 2',           fecha:'Mié 15 Jul · 7:00 PM', tipo:'premium', cart_proy:20, cubetas_proy:47, ind_proy:50 },
+    { match:'🏆 La Gran Final',         fecha:'Dom 19 Jul · 1:00 PM', tipo:'premium', cart_proy:20, cubetas_proy:47, ind_proy:50 },
+  ],
+};
+
+// PRECIOS
+const P_CUBETA=300, P_IND=55, P_IL2H=200, P_ILMT=100;
+const COSTO_CART=325, CERV_CART=24;
+
+// ══════ CONSTANTES VENTAS ══════
 const BASE=114000,PE=104000,META_SEM=142500,INC_OBJ=28500;
-const PRICE_CERV=55,BASE_CART=12;
 const PRECIOS={cafes:52,postres:75,digestivos:100,mezcales:100,atencion:80};
 const PALANCAS=[
   {id:'cafes',emoji:'☕',label:'Cafés',color:'#b8860b'},
@@ -371,19 +513,15 @@ const PALANCAS=[
   {id:'atencion',emoji:'⭐',label:'Consumo extra',color:'#1e7a3e'},
 ];
 const PCT_ENC=0.35;
-const META_ENC_$=Math.round(INC_OBJ*PCT_ENC);       // $9,975
-const META_MES_$=Math.round(INC_OBJ*(1-PCT_ENC)/3); // $6,175
+const META_ENC_$=Math.round(INC_OBJ*PCT_ENC);
+const META_MES_$=Math.round(INC_OBJ*(1-PCT_ENC)/3);
 const META_REV_ENC=11, META_REV_MES=6;
-const metaPiezasEnc=(pid)=>Math.round((META_ENC_$/PALANCAS.length)/PRECIOS[pid]);
-const metaPiezasMes=(pid)=>Math.round((META_MES_$/PALANCAS.length)/PRECIOS[pid]);
-const SEM_CFG=[
-  {l:'Semana 1',s:'Foco: Cafés & Postres'},
-  {l:'Semana 2',s:'Foco: Cafés & Postres'},
-  {l:'Semana 3',s:'Foco: Digestivos + Atención'},
-  {l:'Semana 4',s:'Foco: Digestivos + Atención'},
-  {l:'Semana 5',s:'Foco: Mezcales + Consolidar'},
-  {l:'Semana 6',s:'Meta Plena +25%'},
-];
+const metaPiezasEnc=pid=>Math.round((META_ENC_$/PALANCAS.length)/PRECIOS[pid]);
+const metaPiezasMes=pid=>Math.round((META_MES_$/PALANCAS.length)/PRECIOS[pid]);
+
+// Cubetas mundial por persona
+const META_CUBI_ENC=8, META_CUBI_MES=13; // encargado 15% extra
+
 const DEFAULT_USERS=[
   {id:'ger',role:'ger',nombre:'Miguel Rojas',pin:'1234',color:'#1c1712',bg:'#e8e2d8'},
   {id:'enc',role:'enc',nombre:'Encargado',   pin:'2222',color:'#3d2010',bg:'#f5e8d8'},
@@ -397,9 +535,8 @@ let week=1, currentUser=null, pinBuf='', selUserId=null;
 let localData={}, users=[...DEFAULT_USERS], unsub=null;
 
 // ══════ FIREBASE ══════
-const weekRef=(w)=>doc(db,'semanas','semana'+(w||week));
+const weekRef=w=>doc(db,'semanas','semana'+(w||week));
 const usersRef=()=>doc(db,'config','usuarios');
-
 function syncBar(msg,type='syncing'){
   const b=document.getElementById('sync-bar');
   b.textContent=msg;b.className='sync-bar show '+type;
@@ -407,22 +544,22 @@ function syncBar(msg,type='syncing'){
 }
 async function saveFS(w,data){
   try{syncBar('⟳ Guardando...','syncing');await setDoc(weekRef(w),data,{merge:true});syncBar('✓ Sincronizado','ok');}
-  catch(e){syncBar('⚠ Sin conexión','error');console.error(e);}
+  catch(e){syncBar('⚠ Sin conexión','error');}
 }
 async function loadFS(w){
   try{const s=await getDoc(weekRef(w));return s.exists()?s.data():{};}
   catch(e){return localData['w'+w]||{};}
 }
-async function saveUsers(u){try{await setDoc(usersRef(),{users:u},{merge:true});}catch(e){console.error(e);}}
+async function saveUsers(u){try{await setDoc(usersRef(),{users:u},{merge:true});}catch(e){}}
 async function loadUsers(){
   try{const s=await getDoc(usersRef());if(s.exists()&&s.data().users)return s.data().users;}catch(e){}
   return DEFAULT_USERS;
 }
 function subscribeWeek(w){
   if(unsub)unsub();
-  unsub=onSnapshot(weekRef(w),(s)=>{
+  unsub=onSnapshot(weekRef(w),s=>{
     if(s.exists()){localData['w'+w]=s.data();refreshAll();}
-  },(e)=>console.error(e));
+  },e=>console.error(e));
 }
 
 // ══════ LOGIN ══════
@@ -467,8 +604,7 @@ window.doLogout=()=>{
   document.getElementById('screen-login').style.display='flex';
   document.getElementById('screen-app').style.display='none';
   document.getElementById('save-fab').style.display='none';
-  renderLogin();
-  document.getElementById('pin-section').style.display='none';
+  renderLogin();document.getElementById('pin-section').style.display='none';
 };
 
 // ══════ TABS ══════
@@ -487,38 +623,40 @@ window.showTab=id=>{
   document.getElementById('tab-'+id)?.classList.add('active');
   document.getElementById('panel-'+id)?.classList.add('active');
   if(id==='rank')renderRanking();
-  if(id==='enc'){renderEncPalancas();renderEncEquipo();}
-  if(id==='ger'){renderGerPalancas();renderAdminUsers();}
-  if(id==='mes')renderMesPalancas();
+  if(id==='enc'){renderEncPalancas();renderEncEquipo();renderEncMundial();}
+  if(id==='ger'){renderGerPalancas();renderAdminUsers();renderGerMundial();}
+  if(id==='mes'){renderMesPalancas();renderMesMundial();}
 };
 
 // ══════ SEMANA ══════
 window.changeWeek=async d=>{
-  week=Math.max(1,Math.min(6,week+d));
+  week=Math.max(1,Math.min(7,week+d));
   updateWeekUI();await loadWeek(week);subscribeWeek(week);
 };
 function updateWeekUI(){
-  const c=SEM_CFG[week-1];
+  const c=SEMANAS[week-1];
   document.getElementById('tb-week').textContent='SEM '+week;
   ['ger','enc','mes'].forEach(id=>{
     const l=document.getElementById('wn-'+id+'-l');const s=document.getElementById('wn-'+id+'-s');
-    if(l)l.textContent=c.l;if(s)s.textContent=c.s;
+    const d=document.getElementById('wn-'+id+'-dates');
+    if(l)l.textContent=c.label;if(s)s.textContent=c.sub;if(d)d.textContent='📅 '+c.dates;
   });
 }
 async function loadWeek(w){
   const data=await loadFS(w);localData['w'+w]=data;refreshAll();
 }
-function getW(){return localData['w'+week]||{};}
-function getMD(mid){return (getW().mes||{})[mid]||{};}
-function getEncP(){return getW().enc_p||{};}
-function getMesUsers(){return users.filter(u=>u.role==='mes');}
+const getW=()=>localData['w'+week]||{};
+const getMD=mid=>(getW().mes||{})[mid]||{};
+const getEncP=()=>getW().enc_p||{};
+const getMesUsers=()=>users.filter(u=>u.role==='mes');
+const getMundialW=()=>getW().mundial||{};
 
 function refreshAll(){
   fillInputs();
   renderGerPalancas();
-  renderEncPalancas();
-  renderMesPalancas();
-  renderEncEquipo();
+  if(document.getElementById('panel-enc').classList.contains('active')){renderEncPalancas();renderEncEquipo();renderEncMundial();}
+  if(document.getElementById('panel-mes').classList.contains('active')){renderMesPalancas();renderMesMundial();}
+  if(document.getElementById('panel-ger').classList.contains('active')){renderGerMundial();}
 }
 function fillInputs(){
   PALANCAS.forEach(p=>{
@@ -527,33 +665,53 @@ function fillInputs(){
   });
   if(currentUser?.role==='mes'){
     const mid=currentUser.id;
-    PALANCAS.forEach(p=>{
-      const el=document.getElementById('mp-inp-'+p.id);
-      if(el&&document.activeElement!==el)el.value=getMD(mid)[p.id]||'';
-    });
-    const rEl=document.getElementById('mes-rev-inp');
-    if(rEl&&document.activeElement!==rEl)rEl.value=getMD(mid).reviews||'';
+    PALANCAS.forEach(p=>{const el=document.getElementById('mp-inp-'+p.id);if(el&&document.activeElement!==el)el.value=getMD(mid)[p.id]||'';});
+    const rEl=document.getElementById('mes-rev-inp');if(rEl&&document.activeElement!==rEl)rEl.value=getMD(mid).reviews||'';
   }
   if(currentUser?.role==='enc'){
-    const rEl=document.getElementById('enc-rev-inp');
-    if(rEl&&document.activeElement!==rEl)rEl.value=getW().enc_reviews||'';
+    const rEl=document.getElementById('enc-rev-inp');if(rEl&&document.activeElement!==rEl)rEl.value=getW().enc_reviews||'';
   }
-  const cart=document.getElementById('ger-cartones');
-  if(cart&&document.activeElement!==cart){cart.value=getW().cartones||'';calcCerveza();}
-  const rev=document.getElementById('ger-rev-inp');
-  if(rev&&document.activeElement!==rev){rev.value=getW().reviews||'';calcReviews();}
 }
 
 // ══════ PIEZAS ══════
 const p2p=(id,n)=>(n||0)*(PRECIOS[id]||0);
-const totPesos=(obj)=>PALANCAS.reduce((s,p)=>s+p2p(p.id,obj[p.id]||0),0);
-const totPiezas=(obj)=>PALANCAS.reduce((s,p)=>s+(obj[p.id]||0),0);
+const totPesos=obj=>PALANCAS.reduce((s,p)=>s+p2p(p.id,obj[p.id]||0),0);
+const totPiezas=obj=>PALANCAS.reduce((s,p)=>s+(obj[p.id]||0),0);
+function readEncP(){const o={};PALANCAS.forEach(p=>{const el=document.getElementById('enc-inp-'+p.id);o[p.id]=el?(parseFloat(el.value)||0):(getEncP()[p.id]||0);});return o;}
+function readMesP(mid){const o={};PALANCAS.forEach(p=>{const el=document.getElementById('mp-inp-'+p.id);o[p.id]=el&&currentUser?.id===mid?(parseFloat(el.value)||0):(getMD(mid)[p.id]||0);});return o;}
 
-function readEncP(){
-  const o={};PALANCAS.forEach(p=>{const el=document.getElementById('enc-inp-'+p.id);o[p.id]=el?(parseFloat(el.value)||0):(getEncP()[p.id]||0);});return o;
+// ══════ MUNDIAL CALC ══════
+function calcPartidoVenta(p, mundialData, idx){
+  const key='p'+idx;
+  const d=mundialData[key]||{};
+  let ingreso=0,costo=0;
+  if(p.tipo==='premium'){
+    const cubetas=parseFloat(d.cubetas)||0;
+    const ind=parseFloat(d.ind)||0;
+    const cartones=parseFloat(d.cartones)||0;
+    ingreso=cubetas*P_CUBETA+ind*P_IND;
+    costo=cartones*COSTO_CART;
+  } else if(p.tipo==='medio'){
+    const personas=parseFloat(d.personas)||0;
+    const ind=parseFloat(d.ind)||0;
+    const cartones=parseFloat(d.cartones)||0;
+    ingreso=personas*P_IL2H+ind*P_IND;
+    costo=cartones*COSTO_CART;
+  } else {
+    const personas=parseFloat(d.personas)||0;
+    const ind=parseFloat(d.ind)||0;
+    const cartones=parseFloat(d.cartones)||0;
+    ingreso=personas*P_ILMT+ind*P_IND;
+    costo=cartones*COSTO_CART;
+  }
+  return {ingreso,costo,utilidad:ingreso-costo};
 }
-function readMesP(mid){
-  const o={};PALANCAS.forEach(p=>{const el=document.getElementById('mp-inp-'+p.id);o[p.id]=el&&currentUser?.id===mid?(parseFloat(el.value)||0):(getMD(mid)[p.id]||0);});return o;
+function totalMundialSemana(){
+  const partidos=PARTIDOS[week]||[];
+  const mdata=getMundialW();
+  let total=0;
+  partidos.forEach((p,i)=>{total+=calcPartidoVenta(p,mdata,i).ingreso;});
+  return total;
 }
 
 // ══════ GERENTE ══════
@@ -566,7 +724,7 @@ function renderGerPalancas(){
     const pesos=p2p(p.id,piezas);totalInc+=pesos;
     const metaPal=Math.round(INC_OBJ/PALANCAS.length);
     const pct=metaPal>0?Math.min(100,Math.round((pesos/metaPal)*100)):0;
-    rows+=`<div class="pal-row"><div class="pal-icon">${p.emoji}</div><div class="pal-info"><div class="pal-name">${p.label}</div><div class="pal-meta">${piezas} piezas · $${pesos.toLocaleString()} · meta $${metaPal.toLocaleString()}</div><div class="pal-bar-wrap"><div class="pal-bar" style="width:${pct}%;background:${p.color};"></div></div></div><div style="text-align:right;min-width:44px;"><div style="font-size:.7rem;font-weight:700;color:${p.color};">${pct}%</div></div></div>`;
+    rows+=`<div class="pal-row"><div class="pal-icon">${p.emoji}</div><div class="pal-info"><div class="pal-name">${p.label}</div><div class="pal-meta">${piezas} piezas · $${pesos.toLocaleString()} · meta $${metaPal.toLocaleString()}</div><div class="pal-bar-wrap"><div class="pal-bar" style="width:${pct}%;background:${p.color};"></div></div></div><div style="text-align:right;min-width:44px;font-size:.7rem;font-weight:700;color:${p.color};">${pct}%</div></div>`;
   });
   div.innerHTML=rows;
   updateGerKPIs(totalInc);
@@ -575,10 +733,15 @@ function renderGerPalancas(){
 }
 function updateGerKPIs(inc){
   const venta=BASE+inc,pct=((inc/BASE)*100).toFixed(1),vspe=venta-PE;
+  const mundialTotal=totalMundialSemana();
+  const grandTotal=venta+mundialTotal;
   setText('ger-venta','$'+Math.round(venta).toLocaleString());
   setText('ger-inc','$'+Math.round(inc).toLocaleString());
   setText('ger-pct',pct+'%');
   setText('ger-vspe',(vspe>=0?'+':'')+Math.round(vspe/1000)+'K');
+  setText('ger-mundial-total','$'+Math.round(mundialTotal).toLocaleString());
+  setText('ger-grand-total','$'+Math.round(grandTotal).toLocaleString());
+  setText('ger-grand-sub','Normal $'+Math.round(venta).toLocaleString()+' + Mundial $'+Math.round(mundialTotal).toLocaleString());
   const pill=document.getElementById('ger-inc-pill'),tag=document.getElementById('ger-tag');
   if(inc>=INC_OBJ){setPill(pill,'✓ Meta lograda','p-ok');tag.textContent='✓ META';}
   else if(inc>0){setPill(pill,'+'+pct+'% avance','p-warn');tag.textContent='EN CURSO';}
@@ -601,16 +764,11 @@ function personaRow(icon,nombre,sub,total,pct,color){
 }
 function renderGerRevDetalle(){
   const div=document.getElementById('ger-rev-detalle');if(!div)return;
-  const encRev=getW().enc_reviews||0;
-  let totalRev=encRev;
+  const encRev=getW().enc_reviews||0;let totalRev=encRev;
   const enc=users.find(u=>u.role==='enc');
-  let rows=`<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.68rem;border-bottom:1px solid var(--bg2);"><span>${enc?enc.nombre:'Encargado'}</span><span style="font-weight:700;">${encRev}/11</span></div>`;
-  getMesUsers().forEach(m=>{
-    const rev=getMD(m.id).reviews||0;totalRev+=rev;
-    rows+=`<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.68rem;border-bottom:1px solid var(--bg2);"><span>${m.nombre}</span><span style="font-weight:700;">${rev}/6</span></div>`;
-  });
+  let rows=`<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:.68rem;border-bottom:1px solid var(--bg2);"><span>${enc?enc.nombre:'Encargado'}</span><span style="font-weight:700;">${encRev}/11</span></div>`;
+  getMesUsers().forEach(m=>{const rev=getMD(m.id).reviews||0;totalRev+=rev;rows+=`<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:.68rem;border-bottom:1px solid var(--bg2);"><span>${m.nombre}</span><span style="font-weight:700;">${rev}/6</span></div>`;});
   div.innerHTML=rows;
-  // actualizar KPIs reseñas gerente
   const pct=Math.round((totalRev/30)*100);
   setText('ger-rev-total',totalRev);setText('ger-rev-pct',pct+'%');
   const pill=document.getElementById('ger-rev-pill');
@@ -621,16 +779,204 @@ function renderGerRevDetalle(){
   Object.keys(localData).forEach(k=>{if(k!=='w'+week){const wd=localData[k];acum+=(wd.enc_reviews||0);getMesUsers().forEach(m=>acum+=((wd.mes?.[m.id]?.reviews)||0));}});
   setText('ger-rev-acum',acum);
 }
-window.calcCerveza=()=>{
-  const cart=parseFloat(document.getElementById('ger-cartones')?.value)||0;
-  const pesos=cart*24*PRICE_CERV;
-  const el=document.getElementById('ger-cerv-pesos');if(el)el.value=pesos?'$'+pesos.toLocaleString():'';
-  setText('ger-cerv',pesos?'$'+pesos.toLocaleString():'$0');
-  setText('ger-cerv-sub',cart>0?(cart/BASE_CART).toFixed(1)+'x vs base':'Base 12 cart.');
+
+// ══════ MUNDIAL GERENTE ══════
+function renderGerMundial(){
+  const div=document.getElementById('ger-mundial-section');if(!div)return;
+  const sem=SEMANAS[week-1];
+  if(!sem.mundial){
+    div.innerHTML=`<div class="no-mundial"><div class="nm-icon">🌍</div><div style="font-weight:600;margin-bottom:4px;">Mundial arranca en Semana 2</div><div>Del 11 de junio en adelante aparecerán los partidos aquí</div></div>`;
+    return;
+  }
+  const partidos=PARTIDOS[week]||[];
+  if(!partidos.length){div.innerHTML='';return;}
+  const mdata=getMundialW();
+  let totalIngreso=0,totalUtil=0,totalCart=0;
+  partidos.forEach((p,i)=>{
+    const v=calcPartidoVenta(p,mdata,i);
+    totalIngreso+=v.ingreso;totalUtil+=v.utilidad;
+    totalCart+=parseFloat((mdata['p'+i]||{}).cartones)||0;
+  });
+
+  let html=`
+    <div class="sec-title"><span>🏆</span>Mundial · 100% extra</div>
+    <div class="mundial-header">
+      <div class="mh-top"><span style="font-size:1.4rem;">⚽</span><div><div class="mh-title">WORLD CUP 2026</div><div class="mh-sub">${SEMANAS[week-1].dates}</div></div></div>
+      <div class="mh-kpis">
+        <div class="mhk"><div class="mhk-val">$${Math.round(totalIngreso).toLocaleString()}</div><div class="mhk-lbl">Venta cerveza</div></div>
+        <div class="mhk"><div class="mhk-val">$${Math.round(totalUtil).toLocaleString()}</div><div class="mhk-lbl">Utilidad</div></div>
+        <div class="mhk"><div class="mhk-val">${totalCart}</div><div class="mhk-lbl">Cartones</div></div>
+      </div>
+    </div>`;
+
+  partidos.forEach((p,i)=>{
+    const key='p'+i;
+    const d=mdata[key]||{};
+    const v=calcPartidoVenta(p,mdata,i);
+    const badgeClass=p.tipo==='premium'?'badge-premium':p.tipo==='medio'?'badge-medio':'badge-bajo';
+    const tipoLabel=p.tipo==='premium'?'🪣 PREMIUM · Cubeta $300':p.tipo==='medio'?'🕑 MEDIO · Ilimitada 2h $200':'⏱️ BAJO · Ilimitada MT $100';
+    const promoInfo=p.tipo==='premium'
+      ? `Proyección: ${p.cubetas_proy} cubetas + ${p.ind_proy} individuales · ${p.cart_proy} cartones`
+      : `Proyección: ${p.tipo==='medio'?p.il2h_proy:p.ilmt_proy} personas ilimitadas · ${p.cart_proy} cartones`;
+
+    let inputsHtml='';
+    if(p.tipo==='premium'){
+      inputsHtml=`
+        <div class="pc-row"><span class="pc-row-lbl">🪣 Cubetas vendidas <span style="font-size:.56rem;">(meta ${p.cubetas_proy})</span></span><input class="pc-inp" type="number" id="g-p${i}-cubetas" value="${d.cubetas||''}" placeholder="${p.cubetas_proy}" oninput="calcPartido(${i})"><span class="pc-auto" id="g-p${i}-cubetas-$">$0</span></div>
+        <div class="pc-row"><span class="pc-row-lbl">🍺 Individuales <span style="font-size:.56rem;">(meta ${p.ind_proy})</span></span><input class="pc-inp" type="number" id="g-p${i}-ind" value="${d.ind||''}" placeholder="${p.ind_proy}" oninput="calcPartido(${i})"><span class="pc-auto" id="g-p${i}-ind-$">$0</span></div>
+        <div class="pc-row"><span class="pc-row-lbl">📦 Cartones consumidos</span><input class="pc-inp" type="number" id="g-p${i}-cartones" value="${d.cartones||''}" placeholder="${p.cart_proy}" oninput="calcPartido(${i})"><span class="pc-auto" id="g-p${i}-costo-$" style="color:var(--red);">$0</span></div>`;
+    } else {
+      const label=p.tipo==='medio'?`🕑 Personas ilimitada 2h (meta ${p.il2h_proy})`:`⏱️ Personas ilimitada MT (meta ${p.ilmt_proy})`;
+      const proy=p.tipo==='medio'?p.il2h_proy:p.ilmt_proy;
+      inputsHtml=`
+        <div class="pc-row"><span class="pc-row-lbl">${label}</span><input class="pc-inp" type="number" id="g-p${i}-personas" value="${d.personas||''}" placeholder="${proy}" oninput="calcPartido(${i})"><span class="pc-auto" id="g-p${i}-personas-$">$0</span></div>
+        <div class="pc-row"><span class="pc-row-lbl">🍺 Individuales adicionales</span><input class="pc-inp" type="number" id="g-p${i}-ind" value="${d.ind||''}" placeholder="0" oninput="calcPartido(${i})"><span class="pc-auto" id="g-p${i}-ind-$">$0</span></div>
+        <div class="pc-row"><span class="pc-row-lbl">📦 Cartones consumidos</span><input class="pc-inp" type="number" id="g-p${i}-cartones" value="${d.cartones||''}" placeholder="${p.cart_proy}" oninput="calcPartido(${i})"><span class="pc-auto" id="g-p${i}-costo-$" style="color:var(--red);">$0</span></div>`;
+    }
+
+    html+=`
+      <div class="partido-card ${p.tipo}" id="partido-card-${i}">
+        <div class="pc-hdr">
+          <span class="pc-badge ${badgeClass}">${p.tipo==='premium'?'⭐ Premium':p.tipo==='medio'?'🔵 Medio':'🟢 Bajo'}</span>
+          <div><div class="pc-match">${p.match}</div><div class="pc-fecha">${p.fecha}</div></div>
+        </div>
+        <div class="pc-promo-info">${tipoLabel}<br><span style="font-size:.58rem;">${promoInfo}</span></div>
+        <div class="pc-inputs">${inputsHtml}</div>
+        <div class="pc-total">
+          <div>
+            <div class="pc-total-lbl">Venta cerveza partido</div>
+            <div style="font-size:.6rem;color:var(--ink-faint);">Costo: <span id="g-p${i}-costo-txt">$0</span> · Utilidad: <span id="g-p${i}-util-txt">$0</span></div>
+          </div>
+          <div class="pc-total-val" id="g-p${i}-total">$0</div>
+        </div>
+      </div>`;
+  });
+  div.innerHTML=html;
+  // Calcular todos al renderizar
+  partidos.forEach((_,i)=>calcPartido(i));
+}
+
+window.calcPartido=function(i){
+  const p=PARTIDOS[week]?.[i];if(!p)return;
+  let ingreso=0,costo=0;
+  if(p.tipo==='premium'){
+    const cubetas=parseFloat(document.getElementById(`g-p${i}-cubetas`)?.value)||0;
+    const ind=parseFloat(document.getElementById(`g-p${i}-ind`)?.value)||0;
+    const cart=parseFloat(document.getElementById(`g-p${i}-cartones`)?.value)||0;
+    const ingCub=cubetas*P_CUBETA,ingInd=ind*P_IND;
+    ingreso=ingCub+ingInd;costo=cart*COSTO_CART;
+    setText(`g-p${i}-cubetas-$`,'$'+Math.round(ingCub).toLocaleString());
+    setText(`g-p${i}-ind-$`,'$'+Math.round(ingInd).toLocaleString());
+  } else {
+    const precio=p.tipo==='medio'?P_IL2H:P_ILMT;
+    const personas=parseFloat(document.getElementById(`g-p${i}-personas`)?.value)||0;
+    const ind=parseFloat(document.getElementById(`g-p${i}-ind`)?.value)||0;
+    const cart=parseFloat(document.getElementById(`g-p${i}-cartones`)?.value)||0;
+    const ingPers=personas*precio,ingInd=ind*P_IND;
+    ingreso=ingPers+ingInd;costo=cart*COSTO_CART;
+    setText(`g-p${i}-personas-$`,'$'+Math.round(ingPers).toLocaleString());
+    setText(`g-p${i}-ind-$`,'$'+Math.round(ingInd).toLocaleString());
+  }
+  const util=ingreso-costo;
+  setText(`g-p${i}-costo-$`,'-$'+Math.round(costo).toLocaleString());
+  setText(`g-p${i}-costo-txt`,'$'+Math.round(costo).toLocaleString());
+  setText(`g-p${i}-util-txt`,'$'+Math.round(util).toLocaleString());
+  setText(`g-p${i}-total`,'$'+Math.round(ingreso).toLocaleString());
+  // Actualizar total mundial en KPIs
+  const total=totalMundialSemana();
+  setText('ger-mundial-total','$'+Math.round(total).toLocaleString());
+  const venta=BASE+(totPesos(readEncP())+getMesUsers().reduce((s,m)=>s+totPesos(readMesP(m.id)),0));
+  setText('ger-grand-total','$'+Math.round(venta+total).toLocaleString());
+  setText('ger-grand-sub','Normal $'+Math.round(venta).toLocaleString()+' + Mundial $'+Math.round(total).toLocaleString());
 };
-window.calcReviews=()=>{
-  // Reviews para gerente se calculan en renderGerRevDetalle
-  renderGerRevDetalle();
+
+// ══════ ENCARGADO MUNDIAL (resumen) ══════
+function renderEncMundial(){
+  const div=document.getElementById('enc-mundial-section');if(!div)return;
+  const sem=SEMANAS[week-1];
+  if(!sem.mundial){div.innerHTML='';return;}
+  const partidos=PARTIDOS[week]||[];if(!partidos.length){div.innerHTML='';return;}
+  const mdata=getMundialW();
+  let totalCerv=0,totalCartones=0;
+  partidos.forEach((p,i)=>{
+    const d=mdata['p'+i]||{};
+    if(p.tipo==='premium'){totalCerv+=(parseFloat(d.cubetas)||0)*6+(parseFloat(d.ind)||0);}
+    else{const proy=p.tipo==='medio'?p.il2h_proy||0:p.ilmt_proy||0;totalCerv+=(parseFloat(d.personas)||proy)*4+(parseFloat(d.ind)||0);}
+    totalCartones+=parseFloat(d.cartones)||0;
+  });
+  // Metas cubetas encargado para premium
+  const premiumPartidos=partidos.filter(p=>p.tipo==='premium').length;
+  const metaCubiEnc=META_CUBI_ENC*premiumPartidos;
+  div.innerHTML=`
+    <div class="sec-title"><span>🏆</span>Mundial esta semana</div>
+    <div class="mes-mundial-card">
+      <div class="mmc-title">⚽ Resumen cerveza · ${partidos.length} partido${partidos.length>1?'s':''}</div>
+      <div class="mmc-sub">${SEMANAS[week-1].dates}</div>
+      <div class="mmc-grid">
+        <div class="mmc-stat"><div class="mmc-val">${totalCerv}</div><div class="mmc-lbl">Cervezas estimadas</div></div>
+        <div class="mmc-stat"><div class="mmc-val">${totalCartones||'—'}</div><div class="mmc-lbl">Cartones reales</div></div>
+        ${premiumPartidos>0?`<div class="mmc-stat"><div class="mmc-val">${metaCubiEnc}</div><div class="mmc-lbl">Tu meta cubetas</div></div>`:''}
+        <div class="mmc-stat"><div class="mmc-val">${partidos.filter(p=>p.tipo==='premium').length}</div><div class="mmc-lbl">Partidos premium</div></div>
+      </div>
+    </div>`;
+}
+
+// ══════ MESERO MUNDIAL ══════
+function renderMesMundial(){
+  const div=document.getElementById('mes-mundial-section');if(!div)return;
+  const sem=SEMANAS[week-1];
+  if(!sem.mundial||!currentUser||currentUser.role!=='mes'){div.innerHTML='';return;}
+  const partidos=PARTIDOS[week]||[];if(!partidos.length){div.innerHTML='';return;}
+  const mdata=getMundialW();
+  const mid=currentUser.id;
+  const premiumCount=partidos.filter(p=>p.tipo==='premium').length;
+  const medioCount=partidos.filter(p=>p.tipo==='medio').length;
+  const bajoCount=partidos.filter(p=>p.tipo==='bajo').length;
+  const metaCubiSem=META_CUBI_MES*premiumCount;
+  const savedMundial=(mdata.meseros||{})[mid]||{};
+
+  let html=`
+    <div class="sec-title"><span>🏆</span>Tu meta mundial</div>
+    <div class="mes-mundial-card">
+      <div class="mmc-title">⚽ Tu objetivo de cerveza</div>
+      <div class="mmc-sub">${partidos.length} partido${partidos.length>1?'s':`'`} esta semana · ${SEMANAS[week-1].dates}</div>
+      <div class="mmc-grid">`;
+
+  if(premiumCount>0) html+=`<div class="mmc-stat"><div class="mmc-val">${metaCubiSem}</div><div class="mmc-lbl">🪣 Meta cubetas</div></div>`;
+  if(medioCount>0)   html+=`<div class="mmc-stat"><div class="mmc-val">${medioCount*14}</div><div class="mmc-lbl">🕑 Meta 2h-ilimitadas</div></div>`;
+  if(bajoCount>0)    html+=`<div class="mmc-stat"><div class="mmc-val">${bajoCount*14}</div><div class="mmc-lbl">⏱️ Meta MT-ilimitadas</div></div>`;
+
+  html+=`</div>`;
+
+  // Un input por partido
+  partidos.forEach((p,i)=>{
+    const badgeLabel=p.tipo==='premium'?'⭐ Premium':p.tipo==='medio'?'🔵 Medio':'🟢 Bajo';
+    const inputLabel=p.tipo==='premium'?`🪣 Cubetas vendidas (meta ${META_CUBI_MES})`:p.tipo==='medio'?`🕑 Personas ilimitada 2h (meta 14)`:`⏱️ Personas ilimitada MT (meta 14)`;
+    const savedVal=(savedMundial['p'+i])||'';
+    html+=`
+      <div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);">
+        <div style="font-size:.65rem;font-weight:700;color:var(--beer);margin-bottom:2px;">${badgeLabel} · ${p.match}</div>
+        <div style="font-size:.6rem;opacity:.6;margin-bottom:8px;">${p.fecha}</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:.65rem;flex:1;">${inputLabel}</span>
+          <input class="mmc-inp" type="number" id="mes-m-p${i}" value="${savedVal}" placeholder="0" oninput="calcMesMundial()" style="width:70px;">
+        </div>
+      </div>`;
+  });
+  html+=`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;">
+        <span style="font-size:.68rem;opacity:.7;">Tu total esta semana</span>
+        <span style="font-family:'Syne',sans-serif;font-weight:700;color:var(--beer);font-size:1rem;" id="mes-mundial-total">0</span>
+      </div>
+    </div>`;
+  div.innerHTML=html;
+  calcMesMundial();
+}
+window.calcMesMundial=()=>{
+  const partidos=PARTIDOS[week]||[];
+  let total=0;
+  partidos.forEach((_,i)=>{total+=parseFloat(document.getElementById('mes-m-p'+i)?.value)||0;});
+  setText('mes-mundial-total',total);
 };
 
 // ══════ ENCARGADO ══════
@@ -670,18 +1016,17 @@ window.calcEnc=()=>{
   if(total>=META_ENC_$){setPill(pill,'✓ Meta lograda','p-ok');tag.textContent='✓ '+pct+'%';}
   else if(total>0){setPill(pill,pct+'% logrado','p-warn');tag.textContent=pct+'%';}
   else{setPill(pill,'Sin datos','p-neu');tag.textContent='—';}
-  // Total restaurante para encargado
   let mesT=0;getMesUsers().forEach(m=>mesT+=totPesos(readMesP(m.id)));
   const totalRest=BASE+total+mesT;
-  const pctRest=((( totalRest-BASE)/BASE)*100).toFixed(1);
+  const incRest=totalRest-BASE;
   setText('enc-total-rest','$'+Math.round(totalRest).toLocaleString());
   setText('enc-aporte-lbl','$'+Math.round(total).toLocaleString());
   setText('enc-equipo-aporte','$'+Math.round(mesT).toLocaleString());
   const totalPill=document.getElementById('enc-total-pill');
   if(totalPill){
-    const inc=totalRest-BASE;
-    if(inc>=INC_OBJ)setPill(totalPill,'✓ Meta','p-ok');
-    else if(inc>0)setPill(totalPill,'+'+pctRest+'%','p-warn');
+    const pctR=((incRest/BASE)*100).toFixed(1);
+    if(incRest>=INC_OBJ)setPill(totalPill,'✓ Meta','p-ok');
+    else if(incRest>0)setPill(totalPill,'+'+pctR+'%','p-warn');
     else setPill(totalPill,'0%','p-neu');
   }
   renderEncEquipo();
@@ -689,15 +1034,13 @@ window.calcEnc=()=>{
 window.calcEncReviews=()=>{
   const val=parseInt(document.getElementById('enc-rev-inp')?.value)||0;
   const pct=Math.round((val/META_REV_ENC)*100);
-  setText('enc-rev-esta',val);setText('enc-rev-pct',pct+'%');
-  setText('enc-rev-val',val+'/11');
+  setText('enc-rev-esta',val);setText('enc-rev-pct',pct+'%');setText('enc-rev-kpi',val+'/11');
 };
 function renderEncEquipo(){
   const div=document.getElementById('enc-equipo');if(!div)return;
   let html='';
   getMesUsers().forEach(m=>{
-    const pObj=readMesP(m.id);
-    const rev=getMD(m.id).reviews||0;
+    const pObj=readMesP(m.id);const rev=getMD(m.id).reviews||0;
     let rows='';
     PALANCAS.forEach(p=>{
       const piezas=pObj[p.id]||0;const meta=metaPiezasMes(p.id);
@@ -710,11 +1053,9 @@ function renderEncEquipo(){
         <div style="width:26px;height:26px;border-radius:50%;background:${m.color}20;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.7rem;color:${m.color};">${m.nombre.charAt(0)}</div>
         <div style="font-weight:700;font-size:.78rem;flex:1;">${m.nombre}</div>
         <div style="font-size:.65rem;color:var(--ink-dim);">${totPiezas(pObj)} pzas</div>
-      </div>
-      ${rows}
+      </div>${rows}
       <div style="display:flex;align-items:center;gap:6px;padding:4px 0;margin-top:4px;border-top:1px dashed var(--bg2);">
-        <span style="font-size:.75rem;">⭐</span>
-        <span style="font-size:.65rem;flex:1;color:var(--ink-dim);">Reseñas Google</span>
+        <span>⭐</span><span style="font-size:.65rem;flex:1;color:var(--ink-dim);">Reseñas Google</span>
         <div style="width:50px;height:3px;background:var(--bg2);border-radius:2px;overflow:hidden;"><div style="height:100%;width:${revPct}%;background:#c9a84c;border-radius:2px;"></div></div>
         <span style="font-size:.65rem;font-weight:700;min-width:36px;text-align:right;">${rev}/${META_REV_MES}</span>
       </div>
@@ -741,8 +1082,7 @@ function renderMesPalancas(){
 }
 window.calcMes=()=>{
   if(!currentUser||currentUser.role!=='mes')return;
-  let totalPz=0;
-  const metaTotal=PALANCAS.reduce((s,p)=>s+metaPiezasMes(p.id),0);
+  let totalPz=0;const metaTotal=PALANCAS.reduce((s,p)=>s+metaPiezasMes(p.id),0);
   PALANCAS.forEach(p=>{
     const piezas=parseFloat(document.getElementById('mp-inp-'+p.id)?.value)||0;
     const meta=metaPiezasMes(p.id);totalPz+=piezas;
@@ -780,13 +1120,13 @@ function renderRanking(){
   document.getElementById('rank-list').innerHTML=items.map((it,i)=>{
     const pct=Math.round((it.total/it.meta)*100);
     const pc=pct>=100?'p-ok':pct>50?'p-warn':'p-off';
-    return `<div class="rank-item"><div class="rank-pos ${poses[i]}">${emojis[i]}</div><div class="pal-icon">${it.icon}</div><div class="rank-info"><div class="rank-name">${it.nombre}</div><div class="rank-det">Meta $${it.meta.toLocaleString()}</div></div><div class="rank-right"><div class="rank-val" style="color:${it.color};">$${it.total.toLocaleString()}</div><div><span class="kc-pill ${pc}">${pct}%</span></div></div></div>`;
+    return `<div class="rank-item"><div class="rank-pos ${poses[i]}">${emojis[i]}</div><div style="font-size:1rem;">${it.icon}</div><div class="rank-info"><div class="rank-name">${it.nombre}</div><div class="rank-det">Meta $${it.meta.toLocaleString()}</div></div><div class="rank-right"><div class="rank-val" style="color:${it.color};">$${it.total.toLocaleString()}</div><span class="kc-pill ${pc}">${pct}%</span></div></div>`;
   }).join('');
   const totalEq=items.reduce((s,it)=>s+it.total,0);
   setText('rank-best',items[0].total>0?items[0].nombre:'—');
   setText('rank-best-val',items[0].total>0?'$'+items[0].total.toLocaleString():'Sin datos');
   setText('rank-total','$'+totalEq.toLocaleString());
-  setText('rank-pct',((totalEq/INC_OBJ)*100).toFixed(0)+'% del incremento objetivo');
+  setText('rank-pct',((totalEq/INC_OBJ)*100).toFixed(0)+'% del objetivo');
   const hist=Object.keys(localData).sort().map(k=>{
     const wd=localData[k];if(!wd.saved_total)return '';
     const n=k.replace('w',''),pct=Math.min(100,Math.round((wd.saved_total/META_SEM)*100));
@@ -811,32 +1151,52 @@ window.saveAdminUsers=async()=>{
     if(n&&n.value.trim())u.nombre=n.value.trim();
     if(p&&p.value.trim().length===4)u.pin=p.value.trim();
   });
-  await saveUsers(users);
-  showToast('✓ Guardado en la nube');renderAdminUsers();renderLogin();renderGerPalancas();
+  await saveUsers(users);showToast('✓ Guardado en la nube');renderAdminUsers();renderLogin();renderGerPalancas();
 };
 
 // ══════ GUARDAR ══════
 window.guardar=async()=>{
   const wData=getW();
-  const encP={};
-  PALANCAS.forEach(p=>{const el=document.getElementById('enc-inp-'+p.id);encP[p.id]=el?(parseFloat(el.value)||0):(wData.enc_p?.[p.id]||0);});
+  const encP={};PALANCAS.forEach(p=>{const el=document.getElementById('enc-inp-'+p.id);encP[p.id]=el?(parseFloat(el.value)||0):(wData.enc_p?.[p.id]||0);});
   const mes=JSON.parse(JSON.stringify(wData.mes||{}));
   if(currentUser?.role==='mes'){
     const mid=currentUser.id;mes[mid]=mes[mid]||{};
     PALANCAS.forEach(p=>{const el=document.getElementById('mp-inp-'+p.id);if(el)mes[mid][p.id]=parseFloat(el.value)||0;});
     const rEl=document.getElementById('mes-rev-inp');if(rEl)mes[mid].reviews=parseFloat(rEl.value)||0;
+    // Guardar mundial mesero
+    const mdata=wData.mundial||{};
+    const meseros=mdata.meseros||{};meseros[mid]=meseros[mid]||{};
+    const partidos=PARTIDOS[week]||[];
+    partidos.forEach((_,i)=>{const el=document.getElementById('mes-m-p'+i);if(el)meseros[mid]['p'+i]=parseFloat(el.value)||0;});
+    mdata.meseros=meseros;
+    const payload={enc_p:encP,mes,enc_reviews:wData.enc_reviews||0,mundial:mdata,saved_total:BASE+totPesos(encP)+getMesUsers().reduce((s,m)=>s+totPesos(mes[m.id]||{}),0)};
+    localData['w'+week]=payload;await saveFS(week,payload);
+  } else {
+    let enc_reviews=wData.enc_reviews||0;
+    if(currentUser?.role==='enc'){const rEl=document.getElementById('enc-rev-inp');if(rEl)enc_reviews=parseFloat(rEl.value)||0;}
+    // Guardar mundial gerente
+    const mdata=JSON.parse(JSON.stringify(wData.mundial||{}));
+    if(currentUser?.role==='ger'){
+      const partidos=PARTIDOS[week]||[];
+      partidos.forEach((p,i)=>{
+        mdata['p'+i]=mdata['p'+i]||{};
+        if(p.tipo==='premium'){
+          const cub=document.getElementById(`g-p${i}-cubetas`);const ind=document.getElementById(`g-p${i}-ind`);const cart=document.getElementById(`g-p${i}-cartones`);
+          if(cub)mdata['p'+i].cubetas=parseFloat(cub.value)||0;
+          if(ind)mdata['p'+i].ind=parseFloat(ind.value)||0;
+          if(cart)mdata['p'+i].cartones=parseFloat(cart.value)||0;
+        } else {
+          const pers=document.getElementById(`g-p${i}-personas`);const ind=document.getElementById(`g-p${i}-ind`);const cart=document.getElementById(`g-p${i}-cartones`);
+          if(pers)mdata['p'+i].personas=parseFloat(pers.value)||0;
+          if(ind)mdata['p'+i].ind=parseFloat(ind.value)||0;
+          if(cart)mdata['p'+i].cartones=parseFloat(cart.value)||0;
+        }
+      });
+    }
+    const encT=totPesos(encP);let mesT=0;getMesUsers().forEach(m=>mesT+=totPesos(mes[m.id]||{}));
+    const payload={enc_p:encP,mes,enc_reviews,mundial:mdata,saved_total:BASE+encT+mesT};
+    localData['w'+week]=payload;await saveFS(week,payload);
   }
-  let enc_reviews=wData.enc_reviews||0;
-  if(currentUser?.role==='enc'||currentUser?.role==='ger'){
-    const rEl=document.getElementById('enc-rev-inp');if(rEl)enc_reviews=parseFloat(rEl.value)||0;
-  }
-  const cart=parseFloat(document.getElementById('ger-cartones')?.value)||wData.cartones||0;
-  const encT=totPesos(encP);
-  let mesT=0;getMesUsers().forEach(m=>mesT+=totPesos(mes[m.id]||{}));
-  const saved_total=BASE+encT+mesT;
-  const payload={enc_p:encP,mes,cartones:cart,enc_reviews,saved_total};
-  localData['w'+week]=payload;
-  await saveFS(week,payload);
   showToast('✓ Guardado y sincronizado');
 };
 
