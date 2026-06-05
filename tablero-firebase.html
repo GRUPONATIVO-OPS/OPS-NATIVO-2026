@@ -216,9 +216,37 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
 .hist-bar{height:100%;background:var(--gold);border-radius:2px;}
 .hist-val{font-size:.7rem;font-weight:600;min-width:70px;text-align:right;}
 .readonly-note{font-size:.6rem;color:var(--ink-faint);text-align:center;padding:6px;background:var(--bg2);border-radius:6px;margin-bottom:10px;}
+
+.edit-mode-banner{display:none;background:linear-gradient(135deg,#1a3a5f,#1A5C8A);color:#fff;border-radius:12px;padding:12px 14px;margin-bottom:10px;align-items:center;gap:10px;}
+.edit-mode-banner.active{display:flex;}
+.emb-icon{font-size:1.4rem;}.emb-info{flex:1;}
+.emb-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;}
+.emb-sub{font-size:.62rem;opacity:.75;margin-top:2px;}
+.emb-autosave{font-size:.6rem;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:10px;font-weight:600;}
+.edit-btn{background:var(--gold);color:#fff;border:none;border-radius:10px;padding:11px;font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;box-shadow:0 3px 12px rgba(184,134,11,.3);}
+.close-edit-btn{background:var(--green);color:#fff;border:none;border-radius:10px;padding:11px;font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;box-shadow:0 3px 12px rgba(30,122,62,.3);}
+.autosave-indicator{position:fixed;top:52px;right:10px;background:var(--green);color:#fff;font-size:.6rem;font-weight:700;padding:3px 10px;border-radius:20px;z-index:400;display:none;}
+.autosave-indicator.show{display:block;}
+.locked-note{font-size:.65rem;color:var(--ink-faint);text-align:center;padding:5px 0;font-style:italic;}
+
+.celebration-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#0d5c2a,#1e7a3e);z-index:500;flex-direction:column;align-items:center;justify-content:center;padding:30px;animation:celebIn .4s ease;}
+.celebration-overlay.show{display:flex;}
+@keyframes celebIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.celeb-trophy{font-size:5rem;margin-bottom:16px;animation:bounce 1s infinite alternate;}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-12px)}}
+.celeb-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:#fff;text-align:center;letter-spacing:2px;text-shadow:0 2px 20px rgba(0,0,0,.3);}
+.celeb-msg{font-family:'Syne',sans-serif;font-size:1.1rem;color:rgba(255,255,255,.9);text-align:center;margin-top:12px;font-weight:600;}
+.celeb-sub{font-size:.82rem;color:rgba(255,255,255,.7);text-align:center;margin-top:8px;line-height:1.5;}
+.celeb-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0;width:100%;max-width:300px;}
+.celeb-stat{background:rgba(255,255,255,.15);border-radius:12px;padding:12px;text-align:center;}
+.celeb-stat-val{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#fff;}
+.celeb-stat-lbl{font-size:.6rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.celeb-close{background:#fff;color:var(--green);border:none;border-radius:12px;padding:14px 32px;font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;letter-spacing:1px;cursor:pointer;margin-top:8px;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+.celeb-stars{font-size:1.2rem;letter-spacing:4px;margin-bottom:8px;}
 </style>
 </head>
 <body>
+<div class="autosave-indicator" id="autosave-indicator">💾 Auto-guardado</div>
 <div class="sync-bar" id="sync-bar">⟳ Sincronizando...</div>
 
 <!-- LOGIN -->
@@ -422,7 +450,10 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
       <div class="kpi-card ac-amber"><div class="kc-lbl">Falta</div><div class="kc-val" id="enc-falta-val" style="font-size:1rem;">—</div></div>
       <div class="kpi-card ac-purple"><div class="kc-lbl">⭐ Reseñas</div><div class="kc-val" id="enc-rev-kpi">0/11</div></div>
     </div>
-    <div class="sec-title"><span>⚡</span>Tu captura (piezas → $ auto)</div>
+    <div id="enc-edit-banner" class="edit-mode-banner"><div class="emb-icon">✏️</div><div class="emb-info"><div class="emb-title">Modo edicion activo</div><div class="emb-sub">Modifica tus datos y los del equipo</div></div><div class="emb-autosave" id="enc-autosave-lbl">Pendiente</div></div>
+<button class="edit-btn" id="enc-edit-btn" onclick="toggleEditMode('enc')">✏️ EDITAR MIS DATOS</button>
+<button class="close-edit-btn" id="enc-close-btn" style="display:none;" onclick="closeEditMode('enc')">✅ GUARDAR Y CERRAR</button>
+<div class="sec-title"><span>⚡</span>Tu captura (piezas → $ auto)</div>
     <div class="inp-card" id="enc-palancas"></div>
     <div class="sec-title"><span>⭐</span>Tus reseñas · Meta 11/sem</div>
     <div class="rev-card">
@@ -485,7 +516,14 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
       <div class="kpi-card ac-purple"><div class="kc-lbl">🌵 Mezcales</div><div class="kc-val" id="mes-kpi-mezcales">0</div><div class="kc-sub" id="mes-kpi-mezcales-m">meta 0</div></div>
       <div class="kpi-card ac-green"><div class="kc-lbl">⭐ Extras</div><div class="kc-val" id="mes-kpi-atencion">0</div><div class="kc-sub" id="mes-kpi-atencion-m">meta 0</div></div>
     </div>
-    <div class="sec-title"><span>⚡</span>Captura tus piezas</div>
+    <div id="mes-edit-banner" class="edit-mode-banner">
+  <div class="emb-icon">✏️</div>
+  <div class="emb-info"><div class="emb-title">Modo edición activo</div><div class="emb-sub">Modifica tus datos libremente · Auto-guardando</div></div>
+  <div class="emb-autosave" id="mes-autosave-lbl">● Pendiente</div>
+</div>
+<button class="edit-btn" id="mes-edit-btn" onclick="toggleEditMode('mes')">✏️ EDITAR MIS DATOS</button>
+<button class="close-edit-btn" id="mes-close-btn" style="display:none;" onclick="closeEditMode('mes')">✅ GUARDAR Y CERRAR</button>
+<div class="sec-title"><span>⚡</span>Captura tus piezas</div>
     <div class="inp-card" id="mes-palancas"></div>
     <div class="sec-title"><span>⭐</span>Tu meta reseñas · 6/sem</div>
     <div class="rev-card">
@@ -649,6 +687,9 @@ function updateCommentStatus(key,id,status){ if(window._updateCommentStatus)wind
 function saveAdminUsers(){ if(window._saveAdminUsers)window._saveAdminUsers(); }
 function cerrarSemana(){ if(window._cerrarSemana)window._cerrarSemana(); else alert('Cargando...'); }
 function resetDatos(){ if(window.resetDatos)window.resetDatos(); else alert('Cargando...'); }
+function toggleEditMode(r){ if(window.toggleEditMode)window.toggleEditMode(r); }
+function closeCelebration(){ if(window.closeCelebration)window.closeCelebration(); }
+function closeEditMode(r){ if(window.closeEditMode)window.closeEditMode(r); }
 function verResumenMes(n){ if(window.verResumenMes)window.verResumenMes(n); else alert('Cargando...'); }
 function cerrarModalResumen(){ if(window.cerrarModalResumen)window.cerrarModalResumen(); }
 function descargarResumenPDF(n){ if(window.descargarResumenPDF)window.descargarResumenPDF(n); else alert('Cargando...'); }
@@ -1071,7 +1112,11 @@ function fillInputs(){
   const closed=isCurrWeekClosed();
   // Hide/show save fab
   const fab=document.getElementById('save-fab');
-  if(fab)fab.style.display=(closed||currentUser?.role==='dg')?'none':'flex';
+  if(fab)fab.style.display='none';
+  const mesEB=document.getElementById('mes-edit-btn');
+  const encEB=document.getElementById('enc-edit-btn');
+  if(closed){if(mesEB)mesEB.style.display='none';if(encEB)encEB.style.display='none';}
+  else{if(mesEB&&!isEditMode('mes'))mesEB.style.display='flex';if(encEB&&!isEditMode('enc'))encEB.style.display='flex';}
   // For enc and mes - hide the ENTIRE panel content and show locked banner only
   if(currentUser?.role==='enc'||currentUser?.role==='mes'){
     const role=currentUser.role==='enc'?'enc':'mes';
@@ -1325,7 +1370,7 @@ function renderEncPalancas(){
     const pct=metaPesos>0?Math.min(100,Math.round((pesos/metaPesos)*100)):0;
     rows+=`<div class="pal-row"><div class="pal-icon">${p.emoji}</div><div class="pal-info"><div class="pal-name">${p.label} <span style="font-size:.56rem;color:var(--ink-faint);">$${PRECIOS[p.id]}/pza · meta ${metaPal} pzas</span></div><div class="pal-meta" id="ep-sub-${p.id}">$${pesos.toLocaleString()} de $${metaPesos.toLocaleString()}</div><div class="pal-bar-wrap"><div class="pal-bar" id="ep-bar-${p.id}" style="width:${pct}%;background:${p.color};"></div></div></div><div class="pal-inp-wrap"><input class="pal-inp" type="number" id="enc-inp-${p.id}" value="${piezas}" placeholder="0" oninput="calcEnc()"><div class="pal-sub" id="ep-peso-${p.id}">$${pesos.toLocaleString()}</div></div></div>`;
   });
-  div.innerHTML=rows;calcEnc();
+  div.innerHTML=rows;calcEnc();setTimeout(function(){initEditMode('enc');addChangeListeners('enc');},150);
 }
 window.renderEncPalancas=renderEncPalancas;
 window._populateEncTarget=populateEncTarget;
@@ -1364,6 +1409,8 @@ window.calcEnc=()=>{
   if(total>=META_ENC_$){setPill(pill,'✓ Meta lograda','p-ok');tag.textContent='✓ '+pct+'%';}
   else if(total>0){setPill(pill,pct+'% logrado','p-warn');tag.textContent=pct+'%';}
   else{setPill(pill,'Sin datos','p-neu');tag.textContent='—';}
+  // Check if 100% achieved
+  if(total >= META_ENC_$ && currentUser) checkCelebration('enc');
   let mesT=0;getMesUsers().forEach(m=>mesT+=totPesos(readMesP(m.id)));
   const totalRest=BASE+total+mesT;const incRest=totalRest-BASE;
   setText('enc-total-rest','$'+Math.round(totalRest).toLocaleString());
@@ -1496,7 +1543,7 @@ function renderMesPalancas(){
     const pct=meta>0?Math.min(100,Math.round(((parseFloat(piezas)||0)/meta)*100)):0;
     rows+=`<div class="pal-row"><div class="pal-icon">${p.emoji}</div><div class="pal-info"><div class="pal-name">${p.label}</div><div class="pal-meta" id="mp-sub-${p.id}"><span class="pal-meta-chip">Meta: ${meta} pzas</span> Llevas: ${parseFloat(piezas)||0}</div><div class="pal-bar-wrap"><div class="pal-bar" id="mp-bar-${p.id}" style="width:${pct}%;background:${p.color};"></div></div></div><div class="pal-inp-wrap"><input class="pal-inp" type="number" id="mp-inp-${p.id}" value="${piezas}" placeholder="0" oninput="calcMes()"><div class="pal-sub" id="mp-pct-${p.id}">${pct}%</div></div></div>`;
   });
-  div.innerHTML=rows;setText('mes-nombre-hdr',currentUser.nombre+' — '+(currentUser.role==='bar'?'Barra':'Mesero'));calcMes();
+  div.innerHTML=rows;setText('mes-nombre-hdr',currentUser.nombre+' — '+(currentUser.role==='bar'?'Barra':'Mesero'));calcMes();setTimeout(function(){initEditMode('mes');addChangeListeners('mes');},150);
 }
 window.renderMesPalancas=renderMesPalancas;
 
@@ -1523,11 +1570,14 @@ window.calcMes=()=>{
   if(totalPz>=metaTotal){setPill(pill,'✓ Meta lograda','p-ok');tag.textContent='✓ '+pct+'%';}
   else if(totalPz>0){setPill(pill,pct+'% logrado','p-warn');tag.textContent=pct+'%';}
   else{setPill(pill,'Sin datos','p-neu');tag.textContent='—';}
+  // Check if 100% achieved
+  if(totalPz >= metaTotal && currentUser) checkCelebration(currentUser.role);
 };
 
 window.calcMesReviews=()=>{
   const val=parseInt(document.getElementById('mes-rev-inp')?.value)||0;
   setText('mes-rev-esta',val);setText('mes-rev-pct',Math.round((val/META_REV_MES)*100)+'%');
+  if(val>=META_REV_MES && currentUser) checkCelebration(currentUser.role);
 };
 
 function renderMesMundial(){
@@ -1923,6 +1973,166 @@ function renderDGResumenes(){
 }
 window.renderDGResumenes=renderDGResumenes;
 
+// ══════ EDIT MODE ══════
+let editModeActive={};
+let autoSaveTimers={};
+let pendingChanges={};
+
+function isEditMode(role){return editModeActive[role]===true;}
+
+window.toggleEditMode=function(role){
+  if(isEditMode(role))return;
+  editModeActive[role]=true;
+  pendingChanges[role]=false;
+  const banner=document.getElementById(role+'-edit-banner');
+  const editBtn=document.getElementById(role+'-edit-btn');
+  const closeBtn=document.getElementById(role+'-close-btn');
+  if(banner)banner.classList.add('active');
+  if(editBtn)editBtn.style.display='none';
+  if(closeBtn)closeBtn.style.display='flex';
+  document.getElementById('save-fab').style.display='none';
+  setInputsLocked(role,false);
+  startAutoSave(role);
+  showToast('Modo edicion activado');
+};
+
+window.closeEditMode=async function(role){
+  await guardar();
+  editModeActive[role]=false;
+  pendingChanges[role]=false;
+  if(autoSaveTimers[role]){clearInterval(autoSaveTimers[role]);delete autoSaveTimers[role];}
+  const banner=document.getElementById(role+'-edit-banner');
+  const editBtn=document.getElementById(role+'-edit-btn');
+  const closeBtn=document.getElementById(role+'-close-btn');
+  if(banner)banner.classList.remove('active');
+  if(editBtn)editBtn.style.display='flex';
+  if(closeBtn)closeBtn.style.display='none';
+  setInputsLocked(role,true);
+  showToast('Datos guardados y bloqueados');
+};
+
+function startAutoSave(role){
+  if(autoSaveTimers[role])clearInterval(autoSaveTimers[role]);
+  autoSaveTimers[role]=setInterval(async function(){
+    if(!isEditMode(role)||!pendingChanges[role])return;
+    const lbl=document.getElementById(role+'-autosave-lbl');
+    if(lbl)lbl.textContent='Guardando...';
+    await guardar();
+    pendingChanges[role]=false;
+    if(lbl)lbl.textContent='Guardado';
+    const ind=document.getElementById('autosave-indicator');
+    if(ind){ind.classList.add('show');setTimeout(()=>ind.classList.remove('show'),2000);}
+  },15000);
+}
+
+function markPendingChange(role){
+  if(isEditMode(role)){
+    pendingChanges[role]=true;
+    const lbl=document.getElementById(role+'-autosave-lbl');
+    if(lbl)lbl.textContent='Cambios pendientes';
+  }
+}
+
+function setInputsLocked(role,locked){
+  const panelId=role==='mes'?'panel-mes':'panel-enc';
+  const panel=document.getElementById(panelId);
+  if(!panel)return;
+  panel.querySelectorAll('input[type="number"]').forEach(function(el){
+    if(!el.id||(!el.id.includes('apin')&&!el.id.includes('aname'))){
+      el.disabled=locked;
+      el.style.opacity=locked?'0.55':'1';
+      el.style.background=locked?'var(--bg2)':'';
+    }
+  });
+}
+
+function initEditMode(role){
+  editModeActive[role]=false;
+  setInputsLocked(role,true);
+  const editBtn=document.getElementById(role+'-edit-btn');
+  const closeBtn=document.getElementById(role+'-close-btn');
+  if(editBtn)editBtn.style.display='flex';
+  if(closeBtn)closeBtn.style.display='none';
+}
+
+function addChangeListeners(role){
+  const panelId=role==='mes'?'panel-mes':'panel-enc';
+  const panel=document.getElementById(panelId);
+  if(!panel)return;
+  panel.querySelectorAll('input,textarea').forEach(function(el){
+    el.addEventListener('input',function(){markPendingChange(role);});
+  });
+}
+
+// ══════ CELEBRATION ══════
+let celebrationShown = {};
+
+function checkCelebration(role) {
+  if(!currentUser) return;
+  const uid = currentUser.id;
+  const weekKey = 'w' + week + '_' + uid;
+  // Only show once per week per user
+  if(celebrationShown[weekKey]) return;
+
+  let pct = 0;
+  let metaVal = 0;
+  let ventaVal = 0;
+  let piezasTotal = 0;
+  let revs = 0;
+
+  if(role === 'mes' || role === 'bar') {
+    const mid = currentUser.id;
+    const pObj = readMesP(mid);
+    ventaVal = totPesos(pObj);
+    metaVal = getMetaUser(mid);
+    piezasTotal = totPiezas(pObj);
+    revs = getMD(mid).reviews || 0;
+    const revMeta = META_REV_MES;
+    pct = metaVal > 0 ? Math.round((ventaVal / metaVal) * 100) : 0;
+    // Only celebrate if BOTH sales AND reviews are at 100%
+    const revPct = revMeta > 0 ? Math.round((revs / revMeta) * 100) : 0;
+    if(pct < 100 || revPct < 100) return;
+  } else if(role === 'enc') {
+    const pObj = readEncP();
+    ventaVal = totPesos(pObj);
+    metaVal = ENC_META_FIJO;
+    piezasTotal = totPiezas(pObj);
+    revs = getW().enc_reviews || 0;
+    pct = metaVal > 0 ? Math.round((ventaVal / metaVal) * 100) : 0;
+    const revPct = META_REV_ENC > 0 ? Math.round((revs / META_REV_ENC) * 100) : 0;
+    if(pct < 100 || revPct < 100) return;
+  }
+
+  // Show celebration!
+  celebrationShown[weekKey] = true;
+  const msgs = [
+    '¡Eres un chingón! 🔥',
+    '¡Así se hace! 💪',
+    '¡De los mejores del equipo! 🏅',
+    '¡Puro Grupo Nativo! 🌟',
+    '¡La rompes! 🚀',
+  ];
+  const msg = msgs[Math.floor(Math.random() * msgs.length)];
+  const el = document.getElementById('celeb-msg');
+  const sub = document.getElementById('celeb-sub');
+  const stats = document.getElementById('celeb-stats');
+  if(el) el.textContent = msg;
+  if(sub) sub.innerHTML = 'Llegaste al <b>100%</b> de tu meta de la Semana ' + week + '.<br>El equipo Grupo Nativo lo reconoce.';
+  if(stats) stats.innerHTML =
+    '<div class="celeb-stat"><div class="celeb-stat-val">$' + ventaVal.toLocaleString() + '</div><div class="celeb-stat-lbl">Venta sugestiva</div></div>' +
+    '<div class="celeb-stat"><div class="celeb-stat-val">' + piezasTotal + '</div><div class="celeb-stat-lbl">Piezas vendidas</div></div>' +
+    '<div class="celeb-stat"><div class="celeb-stat-val">' + revs + '</div><div class="celeb-stat-lbl">Reseñas Google</div></div>' +
+    '<div class="celeb-stat"><div class="celeb-stat-val">100%</div><div class="celeb-stat-lbl">Meta cumplida</div></div>';
+
+  const overlay = document.getElementById('celebration-overlay');
+  if(overlay) overlay.classList.add('show');
+}
+
+window.closeCelebration = function() {
+  const overlay = document.getElementById('celebration-overlay');
+  if(overlay) overlay.classList.remove('show');
+};
+
 function setText(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
 function setPill(el,txt,cls){if(!el)return;el.textContent=txt;el.className='kc-pill '+cls;}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
@@ -1938,9 +2148,13 @@ window._renderWeekStatus = renderWeekStatus;
 
 window.resetDatos=async function(){
   if(currentUser?.role!=='ger'){showToast('Solo el gerente puede resetear');return;}
-  const pin=prompt('PIN del gerente para borrar datos de prueba:');
-  if(!pin||pin!==currentUser.pin){showToast('PIN incorrecto');return;}
-  if(!confirm('Borrar todos los datos de semanas? Usuarios y PINs se mantienen.'))return;
+  const pinGer=prompt('Paso 1/2 — PIN del Gerente:');
+  if(!pinGer||pinGer!==currentUser.pin){showToast('PIN de gerente incorrecto');return;}
+  showToast('Solicita al Director General que autorice con su PIN');
+  const pinDG=prompt('Paso 2/2 — PIN del Director General (autorizacion requerida):');
+  const dgUser=users.find(function(u){return u.id==='dg';});
+  if(!pinDG||!dgUser||pinDG!==dgUser.pin){showToast('PIN de DG incorrecto — operacion cancelada');return;}
+  if(!confirm('Autorizacion recibida. Confirmar borrado de datos de semanas? Usuarios y PINs se mantienen.'))return;
   try{
     syncBar('Limpiando datos...','syncing');
     const {deleteDoc:dd}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
@@ -1988,6 +2202,17 @@ init();
     </div>
     <div id="modal-resumen-body" style="padding:4px;"></div>
   </div>
+</div>
+
+<!-- CELEBRATION OVERLAY -->
+<div class="celebration-overlay" id="celebration-overlay">
+  <div class="celeb-stars">⭐⭐⭐⭐⭐</div>
+  <div class="celeb-trophy">🏆</div>
+  <div class="celeb-title">¡META CUMPLIDA!</div>
+  <div class="celeb-msg" id="celeb-msg">¡Eres un chingón!</div>
+  <div class="celeb-sub" id="celeb-sub">Llegaste al 100% de tu meta semanal.<br>El equipo Grupo Nativo lo sabe.</div>
+  <div class="celeb-stats" id="celeb-stats"></div>
+  <button class="celeb-close" onclick="closeCelebration()">¡ÓRALE! 🤜</button>
 </div>
 </body>
 </html>
