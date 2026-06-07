@@ -368,11 +368,15 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
     <div class="grand-total">
       <div class="gt-lbl">💰 Total negocio esta semana</div>
       <div class="gt-val" id="ger-grand-total">$60,000</div>
-      <div class="gt-sub" id="ger-grand-sub">Normal + Mundial</div>
+      <div class="gt-sub" id="ger-grand-sub">Normal + Palancas + Mundial</div>
     </div>
     <div class="kpi-grid">
-      <div class="kpi-card ac-gold"><div class="kc-lbl">Venta Normal</div><div class="kc-val" id="ger-venta">$60,000</div><div class="kc-sub">Base + sugestivos</div></div>
-      <div class="kpi-card ac-green"><div class="kc-lbl">Incremento</div><div class="kc-val" id="ger-inc">$0</div><div class="kc-pill p-neu" id="ger-inc-pill">Sin ventas</div></div>
+      <div class="kpi-card ac-gold"><div class="kc-lbl">🏪 Venta Normal</div><div class="kc-val" id="ger-venta">—</div><div class="kc-sub" id="ger-vn-sub">Captura encargado</div></div>
+      <div class="kpi-card ac-green"><div class="kc-lbl">vs Objetivo $60K</div><div class="kc-val" id="ger-inc">—</div><div class="kc-pill p-neu" id="ger-inc-pill">Sin datos</div></div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card ac-beer"><div class="kc-lbl">🦈 Palancas equipo</div><div class="kc-val" id="ger-pal-total">$0</div><div class="kc-sub" id="ger-pal-sub">0% del extra</div></div>
+      <div class="kpi-card ac-amber"><div class="kc-lbl">🏆 Mundial equipo</div><div class="kc-val" id="ger-mnd-total">$0</div><div class="kc-sub" id="ger-mnd-sub">utilidad $0</div></div>
     </div>
     <div class="kpi-grid three">
       <div class="kpi-card ac-blue"><div class="kc-lbl">% Avance</div><div class="kc-val" id="ger-pct">0%</div><div class="kc-sub">Meta +30%</div></div>
@@ -447,8 +451,11 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
       <div class="tot-row"><span class="tot-lbl">Venta total restaurante</span><span class="kc-pill p-neu" id="enc-total-pill">0%</span></div>
       <div class="tot-row"><span class="tot-val" id="enc-total-rest">$60,000</span></div>
       <div class="tot-divider"></div>
-      <div class="tot-row"><span class="tot-lbl">Tu aporte</span><span style="font-size:.82rem;font-weight:600;" id="enc-aporte-lbl">$0</span></div>
-      <div class="tot-row"><span class="tot-lbl">Equipo meseros</span><span style="font-size:.82rem;font-weight:600;" id="enc-equipo-aporte">$0</span></div>
+      <div class="tot-row"><span class="tot-lbl">🏪 Venta normal</span><span style="font-size:.82rem;font-weight:600;" id="enc-vn-row">$0</span></div>
+      <div class="tot-row"><span class="tot-lbl">🦈 Palancas equipo</span><span style="font-size:.82rem;font-weight:600;" id="enc-pal-row">$0</span></div>
+      <div class="tot-row"><span class="tot-lbl">🏆 Mundial equipo</span><span style="font-size:.82rem;font-weight:600;" id="enc-mnd-row">$0</span></div>
+      <div class="tot-row" style="opacity:.6;font-size:.7rem"><span class="tot-lbl">Tu aporte (palancas)</span><span id="enc-aporte-lbl">$0</span></div>
+      <div class="tot-row" style="opacity:.6;font-size:.7rem"><span class="tot-lbl">Equipo meseros</span><span id="enc-equipo-aporte">$0</span></div>
     </div>
     <div class="kpi-grid">
       <div class="kpi-card ac-gold"><div class="kc-lbl">Tu meta $</div><div class="kc-val" id="enc-meta-val">$9,975</div><div class="kc-sub">35% del objetivo</div></div>
@@ -473,6 +480,19 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;min
       </div>
       <label class="ic-lbl">Reseñas pedidas esta semana</label>
       <input class="ic-inp" type="number" id="enc-rev-inp" placeholder="0" oninput="calcEncReviews()" style="max-width:120px;">
+    </div>
+    <!-- CIERRE SEMANAL: Venta Normal -->
+    <div style="margin-top:14px;padding:12px;background:#1a1a2e;border:1.5px solid rgba(255,215,0,.25);border-radius:12px;">
+      <div style="font-size:.7rem;font-weight:800;color:var(--beer);letter-spacing:.08em;margin-bottom:8px;">📋 CIERRE DE SEMANA · VENTA NORMAL</div>
+      <div style="font-size:.65rem;color:rgba(255,255,255,.55);margin-bottom:10px;">Ingresa el total de ventas del restaurante (efectivo + tarjeta + transferencias), sin contar palancas ni mundial.</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:.75rem;opacity:.7;">$</span>
+        <input type="number" id="enc-venta-normal-inp" placeholder="0" min="0"
+          style="flex:1;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,215,0,.3);border-radius:8px;color:#fff;padding:8px 10px;font-size:1rem;font-weight:700;"
+          oninput="calcEnc()">
+        <span style="font-size:.7rem;opacity:.6;">objetivo $60,000</span>
+      </div>
+      <div id="enc-vn-pill" style="margin-top:6px;font-size:.7rem;color:rgba(255,255,255,.5);">Sin datos aún</div>
     </div>
     <div id="enc-mundial-section"></div>
     <div class="sec-title"><span>👥</span>Avance de tu equipo</div>
@@ -940,6 +960,7 @@ const getMesUsers=()=>users.filter(u=>u.role==='mes');
 const getBarUsers=()=>users.filter(u=>u.role==='bar');
 const getTeamUsers=()=>users.filter(u=>u.role==='mes'||u.role==='bar');
 const getMundialW=()=>getW().mundial||{};
+const getVentaNormal=()=>getW().venta_normal||0;
 const p2p=(id,n)=>(n||0)*(PRECIOS[id]||0);
 const totPesos=obj=>PALANCAS.reduce((s,p)=>s+p2p(p.id,obj[p.id]||0),0);
 const totPiezas=obj=>PALANCAS.reduce((s,p)=>s+(obj[p.id]||0),0);
@@ -1179,7 +1200,12 @@ function fillInputs(){
     PALANCAS.forEach(p=>{const el=document.getElementById('mp-inp-'+p.id);if(el&&document.activeElement!==el)el.value=getMD(mid)[p.id]||'';});
     const rEl=document.getElementById('mes-rev-inp');if(rEl&&document.activeElement!==rEl)rEl.value=getMD(mid).reviews||'';
   }
-  if(currentUser?.role==='enc'){const rEl=document.getElementById('enc-rev-inp');if(rEl&&document.activeElement!==rEl)rEl.value=getW().enc_reviews||'';}
+  if(currentUser?.role==='enc'){
+    const rEl=document.getElementById('enc-rev-inp');
+    if(rEl&&document.activeElement!==rEl)rEl.value=getW().enc_reviews||'';
+    const vnEl=document.getElementById('enc-venta-normal-inp');
+    if(vnEl&&document.activeElement!==vnEl)vnEl.value=getW().venta_normal||'';
+  }
   // Disable/enable inputs based on week status
   const closed=isCurrWeekClosed();
   // Hide/show save fab
@@ -1214,9 +1240,10 @@ function fillInputs(){
 function renderDG(){
   const encT=totPesos(readEncP());
   let mesT=0;getTeamUsers().forEach(m=>mesT+=totPesos(readMesP(m.id)));
-  const vNormal=BASE+encT+mesT,inc=encT+mesT;
+  const vn=getVentaNormal();
+  const inc=encT+mesT;
   const mundial=getMundialTotales();
-  const grand=vNormal+mundial.tI;
+  const grand=(vn||BASE)+inc+mundial.tI;
   const pctMeta=Math.round((inc/INC_OBJ)*100);
   const sem=document.getElementById('dg-semaforo');
   const icon=document.getElementById('dg-sem-icon');
@@ -1226,10 +1253,10 @@ function renderDG(){
   if(pctMeta>=80){sem.className='semaforo-card verde';icon.textContent='✅';status.textContent='EN CAMINO';msg.textContent='El equipo va bien. Mantener el ritmo.';}
   else if(pctMeta>=40){sem.className='semaforo-card amarillo';icon.textContent='⚠️';status.textContent='ATENCIÓN';msg.textContent='Avance moderado. Reforzar sugestivos.';}
   else{sem.className='semaforo-card rojo';icon.textContent='🚨';status.textContent='POR DEBAJO';msg.textContent='Ventas bajo meta. Acción requerida.';}
-  setText('dg-venta-normal','$'+Math.round(vNormal).toLocaleString());
+  setText('dg-venta-normal','$'+Math.round(vn||BASE).toLocaleString());
   setText('dg-venta-mundial','$'+Math.round(mundial.tI).toLocaleString());
   setText('dg-grand-total','$'+Math.round(grand).toLocaleString());
-  setText('dg-grand-sub','Normal $'+Math.round(vNormal).toLocaleString()+' + Mundial $'+Math.round(mundial.tI).toLocaleString());
+  setText('dg-grand-sub','Normal $'+Math.round((vn||BASE)).toLocaleString()+' + Mundial $'+Math.round(mundial.tI).toLocaleString());
   setText('dg-utilidad','$'+Math.round((grand-PE)/1000)+'K');
   const barN=document.getElementById('dg-bar-normal');if(barN)barN.style.width=Math.min(100,Math.round((vNormal/META_SEM)*100))+'%';
   setText('dg-pct-normal',Math.round((vNormal/META_SEM)*100)+'%');
@@ -1310,12 +1337,35 @@ function renderGerPalancas(){
     rows+=`<div class="pal-row"><div class="pal-icon">${p.emoji}</div><div class="pal-info"><div class="pal-name">${p.label}</div><div class="pal-meta">${piezas} pzas · $${pesos.toLocaleString()} · meta $${metaPal.toLocaleString()}</div><div class="pal-bar-wrap"><div class="pal-bar" style="width:${pct}%;background:${p.color};"></div></div></div><div style="text-align:right;min-width:40px;font-size:.7rem;font-weight:700;color:${p.color};">${pct}%</div></div>`;
   });
   div.innerHTML=rows;
-  const venta=BASE+totalInc;const pct=((totalInc/BASE)*100).toFixed(1);const vspe=venta-PE;
+  const vn=getVentaNormal();
   const mundial=getMundialTotales();
-  setText('ger-venta','$'+Math.round(venta).toLocaleString());setText('ger-inc','$'+Math.round(totalInc).toLocaleString());setText('ger-pct',pct+'%');
-  setText('ger-vspe',(vspe>=0?'+':'')+Math.round(vspe/1000)+'K');setText('ger-mundial-kpi','$'+Math.round(mundial.tI).toLocaleString());
-  setText('ger-grand-total','$'+Math.round(venta+mundial.tI).toLocaleString());
-  setText('ger-grand-sub','Normal $'+Math.round(venta).toLocaleString()+' + Mundial $'+Math.round(mundial.tI).toLocaleString());
+  const grandTotal=vn+totalInc+mundial.tI;
+  const vnDiff=vn-BASE;const vnPct=vn>0?((vn/BASE)*100).toFixed(1):null;
+  const palPct=((totalInc/INC_OBJ)*100).toFixed(1);
+  // Venta normal card
+  if(vn>0){
+    setText('ger-venta','$'+Math.round(vn).toLocaleString());
+    const sub=document.getElementById('ger-vn-sub');if(sub)sub.textContent=vnPct+'% del objetivo';
+    setText('ger-inc',(vnDiff>=0?'+':'')+Math.round(vnDiff).toLocaleString());
+    const pill=document.getElementById('ger-inc-pill');
+    if(pill){pill.textContent=vnDiff>=0?'✅ Sobre objetivo':'⚠️ Bajo objetivo';pill.className='kc-pill '+(vnDiff>=0?'p-ok':'p-warn');}
+  } else {
+    setText('ger-venta','—');setText('ger-inc','—');
+    const pill=document.getElementById('ger-inc-pill');if(pill){pill.textContent='Sin datos';pill.className='kc-pill p-neu';}
+  }
+  // Palancas + mundial cards
+  setText('ger-pal-total','$'+Math.round(totalInc).toLocaleString());
+  const palSub=document.getElementById('ger-pal-sub');if(palSub)palSub.textContent=palPct+'% del extra ($'+INC_OBJ.toLocaleString()+')';
+  setText('ger-mnd-total','$'+Math.round(mundial.tI).toLocaleString());
+  const mndSub=document.getElementById('ger-mnd-sub');if(mndSub)mndSub.textContent='utilidad $'+Math.round(mundial.tUtil).toLocaleString();
+  // Grand total
+  setText('ger-grand-total',grandTotal>0?'$'+Math.round(grandTotal).toLocaleString():'$'+Math.round(totalInc+mundial.tI).toLocaleString());
+  setText('ger-grand-sub',(vn>0?'Normal $'+Math.round(vn).toLocaleString()+' + ':'')+' Palancas $'+Math.round(totalInc).toLocaleString()+' + Mundial $'+Math.round(mundial.tI).toLocaleString());
+  // Legacy IDs (kept for compatibility)
+  const gerPct=totalInc>0?((totalInc/INC_OBJ)*100).toFixed(1):'0';
+  setText('ger-pct',gerPct+'%');
+  const vspe=(totalInc+mundial.tI)-PE;setText('ger-vspe',(vspe>=0?'+':'')+Math.round(vspe/1000)+'K');
+  setText('ger-mundial-kpi','$'+Math.round(mundial.tI).toLocaleString());
   const pill=document.getElementById('ger-inc-pill'),tag=document.getElementById('ger-tag');
   if(totalInc>=INC_OBJ){setPill(pill,'✓ Meta lograda','p-ok');tag.textContent='✓ META';}
   else if(totalInc>0){setPill(pill,'+'+pct+'% avance','p-warn');tag.textContent='EN CURSO';}
@@ -1485,12 +1535,27 @@ window.calcEnc=()=>{
   // Check if 100% achieved
   if(total >= META_ENC_$ && currentUser) checkCelebration('enc');
   let mesT=0;getTeamUsers().forEach(m=>mesT+=totPesos(readMesP(m.id)));
-  const totalRest=BASE+total+mesT;const incRest=totalRest-BASE;
+  const vn=getVentaNormal();
+  const mundialT=getMundialTotales().tI;
+  const totalRest=BASE+total+mesT+mundialT;
+  const vnDiff=vn-BASE; const vnPct=((vn/BASE)*100).toFixed(1);
+  // Venta normal pill
+  const vnPillEl=document.getElementById('enc-vn-pill');
+  if(vnPillEl){
+    if(vn===0){vnPillEl.textContent='Sin datos aún';vnPillEl.style.color='rgba(255,255,255,.4)';}
+    else if(vn>=BASE){vnPillEl.textContent='✅ +$'+Math.abs(vnDiff).toLocaleString()+' sobre objetivo ('+vnPct+'%)';vnPillEl.style.color='#4caf50';}
+    else{vnPillEl.textContent='⚠️ -$'+Math.abs(vnDiff).toLocaleString()+' bajo objetivo ('+vnPct+'%)';vnPillEl.style.color='#ff7043';}
+  }
+  // Main cards
   setText('enc-total-rest','$'+Math.round(totalRest).toLocaleString());
   setText('enc-aporte-lbl','$'+Math.round(total).toLocaleString());
   setText('enc-equipo-aporte','$'+Math.round(mesT).toLocaleString());
+  // New breakdown rows
+  const r1=document.getElementById('enc-vn-row');if(r1)r1.textContent='$'+Math.round(vn||0).toLocaleString();
+  const r2=document.getElementById('enc-pal-row');if(r2)r2.textContent='$'+Math.round(total+mesT).toLocaleString();
+  const r3=document.getElementById('enc-mnd-row');if(r3)r3.textContent='$'+Math.round(mundialT).toLocaleString();
   const tp=document.getElementById('enc-total-pill');
-  if(tp){const pR=((incRest/INC_OBJ)*100).toFixed(1);if(incRest>=INC_OBJ)setPill(tp,'✓ Meta','p-ok');else if(incRest>0)setPill(tp,'+'+pR+'%','p-warn');else setPill(tp,'0%','p-neu');}
+  if(tp){const pR=((((total+mesT+mundialT))/INC_OBJ)*100).toFixed(1);if((total+mesT+mundialT)>=INC_OBJ)setPill(tp,'✓ Meta palancas+mundial','p-ok');else if((total+mesT)>0)setPill(tp,pR+'% del extra','p-warn');else setPill(tp,'0%','p-neu');}
   renderEncEquipo();
 };
 
@@ -1815,6 +1880,8 @@ window.guardar=async()=>{
     });
   } else if(currentUser?.role==='enc'){
     const rEl=document.getElementById('enc-rev-inp');if(rEl)enc_reviews=parseFloat(rEl.value)||0;
+    const vnEl=document.getElementById('enc-venta-normal-inp');
+    if(vnEl&&vnEl.value!==''){wData.venta_normal=parseFloat(vnEl.value)||0;}
     const encUser=users.find(u=>u.role==='enc');
     const allU=[...getTeamUsers(),encUser].filter(Boolean);
     allU.forEach(u=>{
@@ -1828,7 +1895,7 @@ window.guardar=async()=>{
     });
   }
   const encT=totPesos(encP);let mesT=0;getTeamUsers().forEach(m=>mesT+=totPesos(mes[m.id]||{}));
-  const payload={enc_p:encP,mes,enc_reviews,mundial,saved_total:BASE+encT+mesT};
+  const payload={enc_p:encP,mes,enc_reviews,mundial,venta_normal:wData.venta_normal||0,saved_total:BASE+encT+mesT};
   localData['w'+week]=payload;await saveFS(week,payload);
   showToast('✓ Guardado y sincronizado');
   // Refresh own panel after save
