@@ -721,6 +721,30 @@ function showTab(id){
 
 // Week nav stubs
 var week=1;window.week=1;
+// Auto-detect current week from date
+(function(){
+  var today=new Date();
+  var starts=[
+    new Date('2026-06-02'), // Sem 1
+    new Date('2026-06-09'), // Sem 2
+    new Date('2026-06-16'), // Sem 3
+    new Date('2026-06-23'), // Sem 4
+    new Date('2026-06-30'), // Sem 5
+    new Date('2026-07-07'), // Sem 6
+    new Date('2026-07-14'), // Sem 7
+    new Date('2026-07-21'), // Sem 8
+    new Date('2026-07-28'), // Sem 9
+    new Date('2026-08-04'), // Sem 10
+    new Date('2026-08-11'), // Sem 11
+    new Date('2026-08-18'), // Sem 12
+    new Date('2026-08-25'), // Sem 13
+  ];
+  var w=1;
+  for(var i=starts.length-1;i>=0;i--){
+    if(today>=starts[i]){w=i+1;break;}
+  }
+  week=Math.min(w,13);window.week=week;
+})();
 function changeWeek(d){week=Math.max(1,Math.min(13,week+d));window.week=week;updateWeekUI();if(window.loadWeekFn)loadWeekFn(week);}
 function updateWeekUI(){
   if(!window.SEMANAS||!window.SEMANAS[week-1])return;
@@ -1739,12 +1763,12 @@ window.calcMesReviews=()=>{
 };
 
 function renderMesMundial(){
-  const week=window.week||1;
   const div=document.getElementById('mes-mundial-section');if(!div)return;
   if(!currentUser||(currentUser.role!=='mes'&&currentUser.role!=='bar')||!window.SEMANAS||!window.SEMANAS[week-1]||!(window.SEMANAS[week-1]||{}).mundial){div.innerHTML='';return;}
   const partidos=PARTIDOS[week]||[];if(!partidos.length){div.innerHTML='';return;}
   const mid=currentUser.id;const mdata=getMundialW();
-  
+  const _isArtu=mid==='artu';
+  const _isFern=mid==='fern';
   let html=`<div class="sec-title"><span>🏆</span>Tu meta mundial</div>`;
   partidos.forEach((p,i)=>{
     const _diaStr=(p.fecha||'').toLowerCase();
